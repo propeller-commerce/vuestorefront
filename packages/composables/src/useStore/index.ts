@@ -1,0 +1,14 @@
+import { Store } from '@propeller-commerce/propeller-api';
+import { Context, useStoreFactory } from '@vue-storefront/core';
+
+export const useStore = useStoreFactory<Store>({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  load(context: Context, params) {
+    return Promise.resolve({});
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  change(context: Context, params) {
+    return Promise.resolve({});
+  },
+});
