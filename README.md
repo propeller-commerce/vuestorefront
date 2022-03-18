@@ -20,10 +20,6 @@ This integration is being developed and maintained by [Propeller](https://propel
 
 1. Clone this repository
 
-```sh
-git clone https://github.com/aliliarif/vsf-propeller.git
-```
-
 2. Install all required dependencies:
 
 ```sh

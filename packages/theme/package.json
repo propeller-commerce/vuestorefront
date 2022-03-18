@@ -19,8 +19,8 @@
     "update:update": "ncu -u"
   },
   "dependencies": {
-    "@propeller-commerce/propeller": "1.0.0",
-    "@propeller-commerce/propeller-mollie": "^0.0.24",
+    "@propeller-commerce/propeller": "1.0.1",
+    "@propeller-commerce/propeller-mollie": "1.0.0",
     "@storefront-ui/vue": "0.11.1",
     "@vue-storefront/middleware": "~2.5.2",
     "@vue-storefront/nuxt": "~2.5.2",
