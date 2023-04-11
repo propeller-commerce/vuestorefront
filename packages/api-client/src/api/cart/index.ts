@@ -7,7 +7,6 @@ import { CartInput } from '../../types/Inputs';
 export default async (context, cartId: string, customQuery?: CustomQuery) => {
   const variables: CartInput = {
     cartId,
-    siteId: context.config.siteId,
     language: context.config?.siteLanguage || 'NL',
   };
 

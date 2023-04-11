@@ -4,18 +4,14 @@ import cartAddBundleQuery from './cartAddBundle';
 import { CartAddBundleInput } from '../../types/Inputs';
 import { CartAddBundleArguments } from '../../types/API';
 
-export default async (
-  context,
-  params: CartAddBundleArguments,
-  customQuery?: CustomQuery
-) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default async (context, params: CartAddBundleArguments, customQuery?: CustomQuery) => {
   const variables: CartAddBundleInput = {
     input: {
       cartId: params.cartId,
       bundleId: params.bundleId,
       quantity: params.quantity,
     },
-    siteId: context.config.siteId,
     language: context.config?.siteLanguage || 'NL',
   };
 

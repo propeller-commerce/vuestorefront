@@ -7,7 +7,6 @@ export default gql`
     $cartId: String!
     $actionCode: String!
     $attributeFilters: AttributeFilterInput
-    $siteId: Int!
     $language: String
   ) {
     cartRemoveActionCode(cartId: $cartId, actionCode: $actionCode) {

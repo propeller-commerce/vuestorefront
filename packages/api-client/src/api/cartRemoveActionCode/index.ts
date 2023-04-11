@@ -4,15 +4,11 @@ import cartRemoveActionCodeQuery from './cartRemoveActionCode';
 import { CartRemoveActionCodeInput } from '../../types/Inputs';
 import { CartRemoveActionCodeArguments } from '../../types/API';
 
-export default async (
-  context,
-  input: CartRemoveActionCodeArguments,
-  customQuery?: CustomQuery
-) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default async (context, input: CartRemoveActionCodeArguments, customQuery?: CustomQuery) => {
   const variables: CartRemoveActionCodeInput = {
     cartId: input.cartId,
     actionCode: input.actionCode,
-    siteId: context.config.siteId,
     language: context.config?.siteLanguage || 'NL',
   };
 

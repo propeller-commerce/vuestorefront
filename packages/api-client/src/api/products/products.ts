@@ -1,13 +1,8 @@
 import gql from 'graphql-tag';
-import {
-  ImageFragment,
-  AttributeFragment,
-  InventoryFragment,
-  ProductPriceFragment,
-} from '../../fragments';
+import { MediaImagesFragment, AttributeFragment, InventoryFragment, ProductPriceFragment } from '../../fragments';
 
 export default gql`
-  ${ImageFragment}
+  ${MediaImagesFragment}
   ${AttributeFragment}
   ${InventoryFragment}
   ${ProductPriceFragment}
@@ -18,7 +13,6 @@ export default gql`
     $sort: [SortInput!]
     $textFilters: [TextFilterInput!]
     $attributeFilters: AttributeFilterInput
-    $siteId: Int!
     $language: String
   ) {
     category(slug: $slug) {
@@ -40,12 +34,7 @@ export default gql`
         value
         language
       }
-      products(
-        offset: $offset
-        page: $page
-        sort: $sort
-        textFilters: $textFilters
-      ) {
+      products(offset: $offset, page: $page, sort: $sort, textFilters: $textFilters) {
         itemsFound
         offset
         page
@@ -93,8 +82,8 @@ export default gql`
             class
             status
             isOrderable
-            images(siteId: $siteId) {
-              ...Image
+            mediaImages(search: { sort: ASC }) {
+              ...MediaImages
             }
             price {
               ...ProductPrice

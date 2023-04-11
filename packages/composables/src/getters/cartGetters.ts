@@ -20,7 +20,7 @@ function getItemName(item: CartBaseItem): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemImage(item: CartBaseItem): string {
-  return item.product.images?.[0]?.url || '';
+  return item.product.mediaImages?.items?.[0]?.imageVariants?.[0]?.url || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -45,9 +45,10 @@ function getItemDiscount(item: CartBaseItem): any {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemAttributes(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   item: CartBaseItem,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   filterByAttributeName?: Array<string>
 ): Record<string, AgnosticAttribute | string> {
   return {
@@ -97,11 +98,11 @@ function getCoupons(cart: Cart): AgnosticCoupon[] {
 function getAppliedCoupon(cart: Cart): AgnosticCoupon | null {
   return cart?.actionCode
     ? {
-        id: cart.actionCode,
-        name: cart.actionCode,
-        value: 0,
-        code: cart.actionCode,
-      }
+      id: cart.actionCode,
+      name: cart.actionCode,
+      value: 0,
+      code: cart.actionCode,
+    }
     : null;
 }
 

@@ -40,7 +40,7 @@ enum SortableFields {
 }
 
 type ImagesInput = {
-  siteId: number;
+  siteId?: number;
 };
 
 type LanguageInput = {
@@ -152,10 +152,7 @@ export type SortInput = {
   order: SortOrder;
 };
 
-export interface BundleDetailInput
-  extends AttributeFilter,
-    ImagesInput,
-    LanguageInput {
+export interface BundleDetailInput extends AttributeFilter, ImagesInput, LanguageInput {
   bundleId: number;
 }
 
@@ -163,32 +160,20 @@ export interface CartInput extends AttributeFilter, ImagesInput, LanguageInput {
   cartId: string;
 }
 
-export interface CartAddActionCodeInput
-  extends AttributeFilter,
-    ImagesInput,
-    LanguageInput {
+export interface CartAddActionCodeInput extends AttributeFilter, ImagesInput, LanguageInput {
   cartId: string;
   actionCode: string;
 }
 
-export interface CartAddBundleInput
-  extends AttributeFilter,
-    ImagesInput,
-    LanguageInput {
+export interface CartAddBundleInput extends AttributeFilter, ImagesInput, LanguageInput {
   input: CartAddBundle;
 }
 
-export interface CartAddItemInput
-  extends AttributeFilter,
-    ImagesInput,
-    LanguageInput {
+export interface CartAddItemInput extends AttributeFilter, ImagesInput, LanguageInput {
   input: CartAddItem;
 }
 
-export interface CartDeleteItemInput
-  extends AttributeFilter,
-    ImagesInput,
-    LanguageInput {
+export interface CartDeleteItemInput extends AttributeFilter, ImagesInput, LanguageInput {
   input: CartDeleteItem;
 }
 
@@ -196,10 +181,7 @@ export interface CartProcessInput extends AttributeFilter {
   input: CartProcess;
 }
 
-export interface CartRemoveActionCodeInput
-  extends AttributeFilter,
-    ImagesInput,
-    LanguageInput {
+export interface CartRemoveActionCodeInput extends AttributeFilter, ImagesInput, LanguageInput {
   cartId: string;
   actionCode: string;
 }
@@ -208,18 +190,11 @@ export interface CartUpdateAddressInput {
   input: CartUpdateAddress;
 }
 
-export interface CartUpdateItemInput
-  extends AttributeFilter,
-    ImagesInput,
-    LanguageInput {
+export interface CartUpdateItemInput extends AttributeFilter, ImagesInput, LanguageInput {
   input: CartUpdateItem;
 }
 
-export interface ProductInput
-  extends AttributeFilter,
-    CrossUpsellTypes,
-    ImagesInput,
-    LanguageInput {
+export interface ProductInput extends AttributeFilter, CrossUpsellTypes, ImagesInput, LanguageInput {
   id?: number;
   productId?: number;
   sku?: string;

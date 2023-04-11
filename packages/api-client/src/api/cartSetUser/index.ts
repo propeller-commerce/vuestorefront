@@ -4,11 +4,8 @@ import cartSetUserQuery from './cartSetUser';
 import { CartSetUserInput } from '../../types/Inputs';
 import { CartSetUserArguments } from '../../types/API';
 
-export default async (
-  context,
-  params: CartSetUserArguments,
-  customQuery?: CustomQuery
-) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default async (context, params: CartSetUserArguments, customQuery?: CustomQuery) => {
   const variables: CartSetUserInput = {
     input: {
       cartId: params.cartId,

@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
-import { ImageFragment, AttributeFragment, InventoryFragment } from '../../fragments';
+import { MediaImagesFragment, AttributeFragment, InventoryFragment } from '../../fragments';
 
 export default gql`
-  ${ImageFragment}
+  ${MediaImagesFragment}
   ${AttributeFragment}
   ${InventoryFragment}
   query products(
@@ -14,7 +14,6 @@ export default gql`
     $attributeFilters: AttributeFilterInput
     $hasBundle: YesNo
     $isBundleLeader: YesNo
-    $siteId: Int!
     $language: String
   ) {
     category(slug: $slug) {
@@ -97,8 +96,8 @@ export default gql`
                   inventory {
                     ...Inventory
                   }
-                  images(siteId: $siteId) {
-                    ...Image
+                  mediaImages(search: { sort: ASC }) {
+                    ...MediaImages
                   }
                   attributes(filter: $attributeFilters) {
                     ...Attribute

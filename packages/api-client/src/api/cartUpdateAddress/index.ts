@@ -4,11 +4,8 @@ import cartUpdateAddressQuery from './cartUpdateAddress';
 import { CartUpdateAddressInput } from '../../types/Inputs';
 import { CartUpdateAddressArguments } from '../../types/API';
 
-export default async (
-  context,
-  params: CartUpdateAddressArguments,
-  customQuery?: CustomQuery
-) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default async (context, params: CartUpdateAddressArguments, customQuery?: CustomQuery) => {
   const variables: CartUpdateAddressInput = {
     input: {
       ...params,
