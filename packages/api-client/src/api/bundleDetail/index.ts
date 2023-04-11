@@ -4,11 +4,8 @@ import bundleQuery from './bundle';
 import { BundleDetailArguments } from '../../types/API';
 import { BundleDetailInput } from '../../types/Inputs';
 
-export default async (
-  context,
-  params: BundleDetailArguments,
-  customQuery?: CustomQuery
-) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default async (context, params: BundleDetailArguments, customQuery?: CustomQuery) => {
   const variables: BundleDetailInput = {
     bundleId: parseInt(params.bundleId),
     siteId: context.config.siteId,

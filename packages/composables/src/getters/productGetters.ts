@@ -1,16 +1,5 @@
-import {
-  AgnosticMediaGalleryItem,
-  AgnosticAttribute,
-  AgnosticPrice,
-  ProductGetters,
-} from '@vue-storefront/core';
-import type {
-  Product,
-  Bundle,
-  Crossupsell,
-  CrossupsellTypes,
-  Attribute,
-} from '@propeller-commerce/propeller-api';
+import { AgnosticMediaGalleryItem, AgnosticAttribute, AgnosticPrice, ProductGetters } from '@vue-storefront/core';
+import type { Product, Bundle, Crossupsell, CrossupsellTypes, Attribute } from '@propeller-commerce/propeller-api';
 
 type ProductFilter = any;
 
@@ -55,7 +44,7 @@ function getGallery(product: Product): AgnosticMediaGalleryItem[] {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCoverImage(product: Product): string {
-  return product.images?.[0]?.url || '';
+  return product?.images?.[0]?.url || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -64,10 +53,7 @@ function getFiltered(products: Product[], filters: ProductFilter): Product[] {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getAttributes(
-  products,
-  filterByAttributeName?: string[]
-): Record<string, AgnosticAttribute | string> {
+function getAttributes(products, filterByAttributeName?: string[]): Record<string, AgnosticAttribute | string> {
   const isSingleProduct = !Array.isArray(products);
   const productList = isSingleProduct ? [products] : products;
 
@@ -77,15 +63,11 @@ function getAttributes(
 
   const formatAttributes = (product: Product): AgnosticAttribute[] =>
     formatAttributeList(product.attributes).filter((attribute) =>
-      filterByAttributeName
-        ? filterByAttributeName.includes(attribute.name)
-        : attribute
+      filterByAttributeName ? filterByAttributeName.includes(attribute.name) : attribute
     );
 
   const reduceToUniques = (prev, curr) => {
-    const isAttributeExist = prev.some(
-      (el) => el.name === curr.name && el.value === curr.value
-    );
+    const isAttributeExist = prev.some((el) => el.name === curr.name && el.value === curr.value);
 
     if (!isAttributeExist) {
       return [...prev, curr];
@@ -155,15 +137,8 @@ function getBundleProducts(product: Product): Bundle[] {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getCrossupsellProducts(
-  product: Product,
-  types: CrossupsellTypes
-): Crossupsell[] {
-  return (
-    product?.crossupsells?.filter((crossupsell) =>
-      types ? types.includes(crossupsell.type) : crossupsell
-    ) || []
-  );
+function getCrossupsellProducts(product: Product, types: CrossupsellTypes): Crossupsell[] {
+  return product?.crossupsells?.filter((crossupsell) => (types ? types.includes(crossupsell.type) : crossupsell)) || [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -8,6 +8,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>;
 };
+
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -18,6 +19,48 @@ export type Scalars = {
   DateTime: any;
   JSONObject: any;
 };
+
+export enum Gender {
+  F = 'F',
+  M = 'M',
+  U = 'U',
+}
+
+export enum YesNo {
+  N = 'N',
+  Y = 'Y',
+}
+
+export enum UserAddressType {
+  Delivery = 'delivery',
+  Home = 'home',
+  Invoice = 'invoice',
+}
+
+export type LocalizedString = {
+  __typename?: 'LocalizedString';
+  language: Scalars['String'];
+  value?: Maybe<Scalars['String']>;
+};
+
+export type LocalizedStringArray = {
+  __typename?: 'LocalizedStringArray';
+  language: Scalars['String'];
+  values?: Maybe<Array<Scalars['String']>>;
+};
+
+export enum AttributeType {
+  Color = 'color',
+  Date = 'date',
+  Datetime = 'datetime',
+  Decimal = 'decimal',
+  Enum = 'enum',
+  Enumlist = 'enumlist',
+  Integer = 'integer',
+  List = 'list',
+  Object = 'object',
+  Text = 'text',
+}
 
 export type Ace = {
   __typename?: 'Ace';
@@ -76,10 +119,20 @@ export type AttributeTextValueArgs = {
   language?: Maybe<Scalars['String']>;
 };
 
+export type IAttributeDecimalRangeFilter = {
+  max: Scalars['Float'];
+  min: Scalars['Float'];
+};
+
 export type AttributeDecimalRangeFilter = IAttributeDecimalRangeFilter & {
   __typename?: 'AttributeDecimalRangeFilter';
   max: Scalars['Float'];
   min: Scalars['Float'];
+};
+
+export type IAttributeIntegerRangeFilter = {
+  max: Scalars['Int'];
+  min: Scalars['Int'];
 };
 
 export type AttributeFilter = IAttributeFilter & {
@@ -111,24 +164,16 @@ export type AttributeIntegerRangeFilter = IAttributeIntegerRangeFilter & {
   min: Scalars['Int'];
 };
 
+export type IAttributeTextFilter = {
+  count: Scalars['Int'];
+  value: Scalars['String'];
+};
+
 export type AttributeTextFilter = IAttributeTextFilter & {
   __typename?: 'AttributeTextFilter';
   count: Scalars['Int'];
   value: Scalars['String'];
 };
-
-export enum AttributeType {
-  Color = 'color',
-  Date = 'date',
-  Datetime = 'datetime',
-  Decimal = 'decimal',
-  Enum = 'enum',
-  Enumlist = 'enumlist',
-  Integer = 'integer',
-  List = 'list',
-  Object = 'object',
-  Text = 'text',
-}
 
 export type Base64File = {
   __typename?: 'Base64File';
@@ -148,6 +193,7 @@ export type BulkPrice = {
   from: Scalars['Int'];
   gross: Scalars['Float'];
   net: Scalars['Float'];
+
   /** @deprecated Bulk price value deprecated in favor of 'net' and 'gross' fields */
   price: Scalars['Float'];
   to?: Maybe<Scalars['Int']>;
@@ -731,17 +777,6 @@ export type GcipUser = {
   uid: Scalars['String'];
 };
 
-export enum Gender {
-  F = 'F',
-  M = 'M',
-  U = 'U',
-}
-
-export type IAttributeDecimalRangeFilter = {
-  max: Scalars['Float'];
-  min: Scalars['Float'];
-};
-
 export type IAttributeFilter = {
   decimalRangeFilter?: Maybe<IAttributeDecimalRangeFilter>;
   description: Scalars['String'];
@@ -753,16 +788,6 @@ export type IAttributeFilter = {
   searchId: Scalars['String'];
   textFilter?: Maybe<Array<AttributeTextFilter>>;
   type: AttributeType;
-};
-
-export type IAttributeIntegerRangeFilter = {
-  max: Scalars['Int'];
-  min: Scalars['Int'];
-};
-
-export type IAttributeTextFilter = {
-  count: Scalars['Int'];
-  value: Scalars['String'];
 };
 
 export type IBaseProduct = {
@@ -1002,18 +1027,6 @@ export type InventoryResponse = {
   supplierCode: Scalars['String'];
   total: Scalars['Int'];
   warehouseId: Scalars['Int'];
-};
-
-export type LocalizedString = {
-  __typename?: 'LocalizedString';
-  language: Scalars['String'];
-  value?: Maybe<Scalars['String']>;
-};
-
-export type LocalizedStringArray = {
-  __typename?: 'LocalizedStringArray';
-  language: Scalars['String'];
-  values?: Maybe<Array<Scalars['String']>>;
 };
 
 export type Login = {
@@ -2156,12 +2169,6 @@ export type UserAddressDeleteInput = {
   userId: Scalars['Int'];
 };
 
-export enum UserAddressType {
-  Delivery = 'delivery',
-  Home = 'home',
-  Invoice = 'invoice',
-}
-
 export type UserAddressUpdateInput = {
   city: Scalars['String'];
   code?: Maybe<Scalars['String']>;
@@ -2204,8 +2211,3 @@ export type VerifyToken = {
 export type VerifyTokenInput = {
   token: Scalars['String'];
 };
-
-export enum YesNo {
-  N = 'N',
-  Y = 'Y',
-}

@@ -1,8 +1,4 @@
-import {
-  Context,
-  useBillingFactory,
-  UseBillingParams,
-} from '@vue-storefront/core';
+import { Context, useBillingFactory, UseBillingParams } from '@vue-storefront/core';
 import type { CartAddress as BillingAddress } from '@propeller-commerce/propeller-api';
 import type { UseBillingAddParams as AddParams } from '../types';
 
@@ -13,12 +9,11 @@ const params: UseBillingParams<BillingAddress, AddParams> = {
 
     const cartCookieName = 'propeller-vsf-cart';
 
-    const existngCartId =
-      context.$propeller.config.app.cookies.get(cartCookieName);
+    const existingCartId = context.$propeller.config.app.cookies.get(cartCookieName);
 
-    if (!existngCartId) return {};
+    if (!existingCartId) return {};
 
-    const cart = await context.$propeller.api.cart(existngCartId);
+    const cart = await context.$propeller.api.cart(existingCartId);
 
     return cart.data.cart?.invoiceAddress;
     // TODO: store address in store and get it fromt here
@@ -44,9 +39,7 @@ const params: UseBillingParams<BillingAddress, AddParams> = {
       ...billingDetails,
     };
 
-    const { data } = await context.$propeller.api.cartUpdateAddress(
-      shippingData
-    );
+    const { data } = await context.$propeller.api.cartUpdateAddress(shippingData);
 
     return data;
   },

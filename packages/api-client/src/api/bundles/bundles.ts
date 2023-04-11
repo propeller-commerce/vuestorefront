@@ -1,9 +1,5 @@
 import gql from 'graphql-tag';
-import {
-  ImageFragment,
-  AttributeFragment,
-  InventoryFragment,
-} from '../../fragments';
+import { ImageFragment, AttributeFragment, InventoryFragment } from '../../fragments';
 
 export default gql`
   ${ImageFragment}
@@ -65,6 +61,10 @@ export default gql`
           }
         }
         items {
+          slug(language: $language) {
+            language
+            value
+          }
           ... on Product {
             bundles {
               id

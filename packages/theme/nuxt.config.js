@@ -97,13 +97,12 @@ export default {
     [
       '@propeller-commerce/propeller-mollie/nuxt',
       {
-        propellerKey: 'bsQaqCpTk6NhRa6rCUd2UMa3aV5oh0oyxndtUE2URitLZmkH',
-        propellerApiUrl: 'https://api.helice.cloud/dev/graphql',
-        mollieKey: 'test_HKCexffVcErTV8jggVdWah7eH25xHq',
-        mollieIsTest: true,
-        mollieRedirectUrl: '/checkout/thank-you',
-        mollieWebhookUrl:
-          'https://b900-78-157-31-8.ngrok.io/mollie/notifications',
+        propellerKey: process.env.PROPELLER_APIKEY || 'test',
+        propellerApiUrl: process.env.PROPELLER_ENDPOINT || 'http://localhost:3000',
+        mollieKey: process.env.MOLLIE_KEY || 'test',
+        mollieIsTest: process.env.MOLLIE_TEST || true,
+        mollieRedirectUrl: process.env.MOLLIER_REDIRECT_URL || '/checkout/thank-you',
+        mollieWebhookUrl: process.env.MOLLIE_WEBHOOK_URL || '/api/extension/propeller-mollie/webhook',
       },
     ],
   ],

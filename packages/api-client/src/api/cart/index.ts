@@ -3,6 +3,7 @@ import { Logger, CustomQuery } from '@vue-storefront/core';
 import cartQuery from './cart';
 import { CartInput } from '../../types/Inputs';
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async (context, cartId: string, customQuery?: CustomQuery) => {
   const variables: CartInput = {
     cartId,

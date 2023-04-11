@@ -1,14 +1,11 @@
 import gql from 'graphql-tag';
-import { Logger, CustomQuery } from '@vue-storefront/core';
+import { Logger, CustomQuery, Context } from '@vue-storefront/core';
 import cartAddActionCodeQuery from './cartAddActionCode';
 import { CartAddActionCodeInput } from '../../types/Inputs';
 import { CartAddActionCodeArguments } from '../../types/API';
 
-export default async (
-  context,
-  input: CartAddActionCodeArguments,
-  customQuery?: CustomQuery
-) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default async (context: Context, input: CartAddActionCodeArguments, customQuery?: CustomQuery) => {
   const variables: CartAddActionCodeInput = {
     cartId: input.cartId,
     actionCode: input.actionCode,
