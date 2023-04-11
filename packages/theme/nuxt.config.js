@@ -101,7 +101,7 @@ export default {
         propellerApiUrl: process.env.PROPELLER_ENDPOINT || 'http://localhost:3000',
         mollieKey: process.env.MOLLIE_KEY || 'test',
         mollieIsTest: process.env.MOLLIE_TEST || true,
-        mollieRedirectUrl: process.env.MOLLIER_REDIRECT_URL || '/checkout/thank-you',
+        mollieRedirectUrl: process.env.MOLLIE_REDIRECT_URL || '/checkout/thank-you',
         mollieWebhookUrl: process.env.MOLLIE_WEBHOOK_URL || '/api/extension/propeller-mollie/webhook',
       },
     ],

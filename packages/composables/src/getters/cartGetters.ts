@@ -6,11 +6,7 @@ import {
   AgnosticDiscount,
   AgnosticAttribute,
 } from '@vue-storefront/core';
-import type {
-  Cart,
-  CartBaseItem,
-  CartTaxLevel,
-} from '@propeller-commerce/propeller-api';
+import type { Cart, CartBaseItem, CartTaxLevel } from '@propeller-commerce/propeller-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): any {
@@ -31,13 +27,22 @@ function getItemImage(item: CartBaseItem): string {
 function getItemPrice(item: CartBaseItem): AgnosticPrice {
   return {
     regular: item.priceNet,
-    // special: 10,
+    special: item.priceNet - item.discount,
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemQty(item: CartBaseItem): number {
   return item.quantity;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// TODO: add proper type
+function getItemDiscount(item: CartBaseItem): any {
+  return {
+    discount: item.discount,
+    percentage: item.discountPercentage,
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -121,6 +126,7 @@ export const cartGetters: CartGetters<Cart, CartBaseItem> = {
   getItemImage,
   getItemPrice,
   getItemQty,
+  getItemDiscount,
   getItemAttributes,
   getItemSku,
   getFormattedPrice,

@@ -35,6 +35,8 @@ export const CartFragment = gql`
       priceNet
       totalPrice
       totalPriceNet
+      discount
+      discountPercentage
       quantity
       product {
         sku
