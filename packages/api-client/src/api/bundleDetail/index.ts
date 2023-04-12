@@ -8,7 +8,6 @@ import { BundleDetailInput } from '../../types/Inputs';
 export default async (context, params: BundleDetailArguments, customQuery?: CustomQuery) => {
   const variables: BundleDetailInput = {
     bundleId: parseInt(params.bundleId),
-    siteId: context.config.siteId,
     language: context.config?.siteLanguage || 'NL',
   };
 

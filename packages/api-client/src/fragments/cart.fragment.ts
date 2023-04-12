@@ -28,6 +28,13 @@ export const CartFragment = gql`
       postage
       postageNet
     }
+    paymentData {
+      method
+      netAmount
+      grossAmount
+      tax
+      taxPercentage
+    }
     items {
       id
       productId

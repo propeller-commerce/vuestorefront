@@ -1,24 +1,18 @@
 <template>
   <div>
     <p>
-      <b
-        >222Please implement vendor-specific VsfPaymentProvider component in the
-        'components/Checkout' directory</b
-      >
+      <b>222Please implement vendor-specific VsfPaymentProvider component in the 'components/Checkout' directory</b>
     </p>
 
     <SfRadio
       v-e2e="'payment-method'"
       v-for="method in shippingMethods"
-      :key="method.value"
-      :label="method.label"
+      :key="method.value" :label="method.label"
       :value="method.value"
       :description="method.description"
-      :selected="selectedMethod"
-      name="shippingMethod"
+      :selected="selectedMethod" name="shippingMethod"
       class="form__radio shipping"
-      @change="selectMethod(method.value)"
-    >
+      @change="selectMethod(method.value)">
       <div class="shipping__label">
         {{ method.label }}
       </div>
@@ -28,21 +22,8 @@
 
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref } from '@nuxtjs/composition-api';
-// import createMollieClient, { Payment } from '@mollie/api-client';
-
-// import { useCko } from '../../checkout-com';
-
-// const {
-//   initForm,
-//   loadAvailableMethods,
-//   availableMethods,
-//   submitDisabled,
-//   storedPaymentInstruments,
-//   loadStoredPaymentInstruments,
-//   submitKlarnaForm,
-//   error,
-// } = useCko();
+import { ref, useContext } from '@nuxtjs/composition-api';
+import { useCart } from '@propeller-commerce/propeller';
 
 const SHIPPING_METHODS = [
   { label: 'Visa Debit', value: 'visa_debit' },
@@ -50,6 +31,7 @@ const SHIPPING_METHODS = [
   { label: 'VisaElectron', value: 'visa_electron' },
   { label: 'Cash on delivery', value: 'cash' },
   { label: 'Check', value: 'check' },
+  { label: 'IDEAL', value: 'IDEAL' },
 ];
 
 export default {
@@ -62,8 +44,21 @@ export default {
 
   setup(props, { emit }) {
     const selectedMethod = ref(null);
+    const context = useContext();
+    const { cart, load } = useCart();
 
     const selectMethod = (method) => {
+      const cartId = cart.value.cartId;
+      const cartUpdateData = {
+        cartId,
+        paymentData: {
+          method,
+        },
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+      const cartUpdate = context.$vsf.$propeller.api.cartUpdate(cartUpdateData);
+
       selectedMethod.value = method;
       emit('status');
     };
@@ -72,6 +67,8 @@ export default {
       shippingMethods: SHIPPING_METHODS,
       selectedMethod,
       selectMethod,
+      cart,
+      load,
     };
   },
 };
