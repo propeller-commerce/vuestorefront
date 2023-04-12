@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import {
   CartGetters,
   AgnosticPrice,
@@ -27,7 +28,7 @@ function getItemImage(item: CartBaseItem): string {
 function getItemPrice(item: CartBaseItem): AgnosticPrice {
   return {
     regular: item.priceNet,
-    special: item.priceNet - item.discount,
+    special: item.totalPriceNet / item.discount,
   };
 }
 
@@ -98,11 +99,11 @@ function getCoupons(cart: Cart): AgnosticCoupon[] {
 function getAppliedCoupon(cart: Cart): AgnosticCoupon | null {
   return cart?.actionCode
     ? {
-      id: cart.actionCode,
-      name: cart.actionCode,
-      value: 0,
-      code: cart.actionCode,
-    }
+        id: cart.actionCode,
+        name: cart.actionCode,
+        value: 0,
+        code: cart.actionCode,
+      }
     : null;
 }
 

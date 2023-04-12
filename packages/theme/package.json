@@ -9,7 +9,6 @@
     "generate": "nuxt generate",
     "lint": "eslint . --ext .ts,.vue",
     "lint:fix": "eslint . --ext .ts,.vue --fix",
-    "precommit": "lint-staged",
     "start": "nuxt start",
     "test": "jest",
     "test:e2e": "cypress open --config-file tests/e2e/cypress.json",
@@ -19,7 +18,7 @@
     "update:update": "ncu -u"
   },
   "dependencies": {
-    "@propeller-commerce/propeller": "1.1.0",
+    "@propeller-commerce/propeller": "1.1.1",
     "@propeller-commerce/propeller-mollie": "1.0.0",
     "@storefront-ui/vue": "0.11.1",
     "@vue-storefront/middleware": "~2.5.2",
