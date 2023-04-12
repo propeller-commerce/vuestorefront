@@ -1,8 +1,4 @@
-import {
-  Context,
-  useFacetFactory,
-  FacetSearchResult,
-} from '@vue-storefront/core';
+import { Context, useFacetFactory, FacetSearchResult } from '@vue-storefront/core';
 import type { UseFacetSearchParams as SearchParams } from '../types';
 
 const availableSortingOptions = [
@@ -52,13 +48,31 @@ const availableSortingOptions = [
   },
 ];
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 const constructTextFilterObject = (inputFilters: Object) => {
+  // filters are constructed as
+  // {TYPE}:{ATTRIBUTE_ID}={ATTRIBUTE_VALUE}
   const filters = [];
 
   Object.keys(inputFilters).forEach((key) => {
+    // in case {TYPE} is not defined (backwards compatibility)
+    const attribute = key.split(':');
+    let type = 'text';
+    let searchId = '';
+
+    if (attribute.length === 2) {
+      // type is provided
+      type = attribute[0].toLowerCase();
+      searchId = attribute[1].toLowerCase();
+    } else {
+      // type is not provided
+      searchId = key.toLowerCase();
+    }
+
     filters.push({
-      searchId: 'attr_' + key.toLowerCase(),
+      searchId: 'attr_' + searchId,
       values: inputFilters[key],
+      type,
     });
   });
 
@@ -69,7 +83,7 @@ const constructSortObject = (sortData: string) => {
   const baseData = sortData.split(/_/gi);
   let data = null;
 
-  if (baseData.length == 2) {
+  if (baseData.length === 2) {
     data = {
       field: baseData[0],
       order: baseData[1],
@@ -114,7 +128,7 @@ const factoryParams = {
     return {
       items: data?.category?.products?.items || [],
       total: data?.category?.products?.itemsFound,
-      availableFilters: data?.category?.products?.availableAttributes,
+      availableFilters: data?.category?.products?.filters,
       category: { id: data?.category?.categoryId },
       itemsPerPage: data?.category?.products?.offset,
       page: data?.category?.products?.page,

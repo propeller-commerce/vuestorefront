@@ -41,7 +41,7 @@ export default gql`
         pages
         start
         end
-        availableAttributes {
+        filters {
           id
           isSearchable
           description
