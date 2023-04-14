@@ -4,16 +4,12 @@ import { CustomQuery } from '@vue-storefront/core';
 import { ProductsInput } from '../../types/Inputs';
 import { ProductsArguments } from '../../types/API';
 
-export default async (
-  context,
-  params: ProductsArguments,
-  customQuery?: CustomQuery
-) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default async (context, params: ProductsArguments, customQuery?: CustomQuery) => {
   const variables: ProductsInput = {
     slug: params.categorySlug,
     offset: params.offset <= 0 ? 12 : params.offset,
     page: params.page <= 0 ? 1 : params.page,
-    siteId: context.config.siteId,
     language: context.config?.siteLanguage || 'NL',
   };
 
@@ -43,8 +39,6 @@ export default async (
   } catch (error) {
     console.log('ERROR');
     console.log(error);
-    throw (
-      error.graphQLErrors?.[0].message || error.networkError?.result || error
-    );
+    throw error.graphQLErrors?.[0].message || error.networkError?.result || error;
   }
 };

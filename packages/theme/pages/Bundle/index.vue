@@ -2,7 +2,7 @@
   <div id="bundle">
     <ul id="example-1">
       <li v-for="product in products" :key="productGetters.getSlug(product)">
-        {{ productGetters.getBundleProducts(product) }}
+        {{ product }}
       </li>
     </ul>
   </div>

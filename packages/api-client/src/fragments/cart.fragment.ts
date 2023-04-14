@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
-import { ImageFragment } from './image.fragment';
+import { MediaImagesFragment } from './mediaImages.fragment';
 import { AttributeFragment } from './attribute.fragment';
 
 export const CartFragment = gql`
-  ${ImageFragment}
+  ${MediaImagesFragment}
   ${AttributeFragment}
   fragment Cart on Cart {
     cartId
@@ -28,6 +28,13 @@ export const CartFragment = gql`
       postage
       postageNet
     }
+    paymentData {
+      method
+      netAmount
+      grossAmount
+      tax
+      taxPercentage
+    }
     items {
       id
       productId
@@ -35,6 +42,8 @@ export const CartFragment = gql`
       priceNet
       totalPrice
       totalPriceNet
+      discount
+      discountPercentage
       quantity
       product {
         sku
@@ -49,8 +58,8 @@ export const CartFragment = gql`
           language
           value
         }
-        images(siteId: $siteId) {
-          ...Image
+        mediaImages(search: { sort: ASC }) {
+          ...MediaImages
         }
         attributes(filter: $attributeFilters) {
           ...Attribute
@@ -90,8 +99,8 @@ export const CartFragment = gql`
             inventory {
               totalQuantity
             }
-            images(siteId: $siteId) {
-              ...Image
+            mediaImages(search: { sort: ASC }) {
+              ...MediaImages
             }
             attributes(filter: $attributeFilters) {
               ...Attribute

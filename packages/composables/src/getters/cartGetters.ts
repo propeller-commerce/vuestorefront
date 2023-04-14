@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import {
   CartGetters,
   AgnosticPrice,
@@ -6,11 +7,7 @@ import {
   AgnosticDiscount,
   AgnosticAttribute,
 } from '@vue-storefront/core';
-import type {
-  Cart,
-  CartBaseItem,
-  CartTaxLevel,
-} from '@propeller-commerce/propeller-api';
+import type { Cart, CartBaseItem, CartTaxLevel } from '@propeller-commerce/propeller-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): any {
@@ -24,14 +21,14 @@ function getItemName(item: CartBaseItem): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemImage(item: CartBaseItem): string {
-  return item.product.images?.[0]?.url || '';
+  return item.product.mediaImages?.items?.[0]?.imageVariants?.[0]?.url || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemPrice(item: CartBaseItem): AgnosticPrice {
   return {
     regular: item.priceNet,
-    // special: 10,
+    special: item.totalPriceNet / item.discount,
   };
 }
 
@@ -41,8 +38,18 @@ function getItemQty(item: CartBaseItem): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// TODO: add proper type
+function getItemDiscount(item: CartBaseItem): any {
+  return {
+    discount: item.discount,
+    percentage: item.discountPercentage,
+  };
+}
+
 function getItemAttributes(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   item: CartBaseItem,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   filterByAttributeName?: Array<string>
 ): Record<string, AgnosticAttribute | string> {
   return {
@@ -121,6 +128,7 @@ export const cartGetters: CartGetters<Cart, CartBaseItem> = {
   getItemImage,
   getItemPrice,
   getItemQty,
+  getItemDiscount,
   getItemAttributes,
   getItemSku,
   getFormattedPrice,

@@ -3,8 +3,8 @@ import { CartFragment } from '../../fragments';
 
 export default gql`
   ${CartFragment}
-  mutation cartDeleteItem($input: CartDeleteItemInput!, $attributeFilters: AttributeFilterInput, $language: String) {
-    cartDeleteItem(input: $input) {
+  mutation cartUpdate($input: CartUpdateInput!, $attributeFilters: AttributeFilterInput, $language: String) {
+    cartUpdate(input: $input) {
       cart {
         ...Cart
       }

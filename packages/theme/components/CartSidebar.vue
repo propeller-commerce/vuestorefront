@@ -38,6 +38,8 @@
               >
                 <template #configuration>
                   <div class="collected-product__properties">
+                    <b>Item discounts: </b>
+                    {{ cartGetters.getItemDiscount(product) }}
                     <b>ShortName: </b>
                     {{ productGetters.getShortName(product.product) }}
                     <b>Inventory: </b>

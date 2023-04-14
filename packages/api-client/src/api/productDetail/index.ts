@@ -4,23 +4,18 @@ import productQuery from './product';
 import { ProductInput } from '../../types/Inputs';
 import { ProductDetailArguments } from '../../types/API';
 
-export default async (
-  context,
-  params: ProductDetailArguments,
-  customQuery?: CustomQuery
-) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default async (context, params: ProductDetailArguments, customQuery?: CustomQuery) => {
   const variables: ProductInput = {
     productId: parseInt(params.id),
     attributeFilters: {
       name: [],
       isPublic: true,
     },
-    siteId: context.config.siteId,
     language: context.config?.siteLanguage || 'NL',
   };
 
-  if (context.config.productListAttributes)
-    variables.attributeFilters.name = context.config.productListAttributes;
+  if (context.config.productListAttributes) variables.attributeFilters.name = context.config.productListAttributes;
 
   if (context.config.crossupsellTypes)
     variables.crossupsellTypesInput = {

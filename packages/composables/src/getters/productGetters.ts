@@ -1,35 +1,20 @@
-import {
-  AgnosticMediaGalleryItem,
-  AgnosticAttribute,
-  AgnosticPrice,
-  ProductGetters,
-} from '@vue-storefront/core';
-import type {
-  Product,
-  Bundle,
-  Crossupsell,
-  CrossupsellTypes,
-  Attribute,
-} from '@propeller-commerce/propeller-api';
+import { AgnosticMediaGalleryItem, AgnosticAttribute, AgnosticPrice, ProductGetters } from '@vue-storefront/core';
+import type { Product, Bundle, Crossupsell, CrossupsellTypes, Attribute } from '@propeller-commerce/propeller-api';
 
 type ProductFilter = any;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getName(product: Product): string {
   return product?.name?.[0].value || '';
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShortName(product: Product): string {
   return product?.shortName || '';
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSlug(product: Product): string {
   return product?.slug?.[0].value || '';
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPrice(product: Product): AgnosticPrice {
   return {
     regular: product.price.net,
@@ -37,25 +22,23 @@ function getPrice(product: Product): AgnosticPrice {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGallery(product: Product): AgnosticMediaGalleryItem[] {
   const images = [];
+  const imageVariants = product?.mediaImages?.items || [];
 
-  // eslint-disable-next-line no-restricted-syntax
-  for (const galleryItem of product.images) {
+  for (const galleryItem of imageVariants) {
     images.push({
-      small: galleryItem.url,
-      normal: galleryItem.url,
-      big: galleryItem.url,
+      small: galleryItem.imageVariants.find((image) => image.name === 'small').url,
+      normal: galleryItem.imageVariants.find((image) => image.name === 'normal').url,
+      big: galleryItem.imageVariants.find((image) => image.name === 'big').url,
     });
   }
 
   return images;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCoverImage(product: Product): string {
-  return product.images?.[0]?.url || '';
+  return product.mediaImages?.items?.[0]?.imageVariants?.[0]?.url || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -63,11 +46,18 @@ function getFiltered(products: Product[], filters: ProductFilter): Product[] {
   return products;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getAttributes(
-  products,
-  filterByAttributeName?: string[]
-): Record<string, AgnosticAttribute | string> {
+const formatAttributeList = (attributes: Attribute[]): AgnosticAttribute[] =>
+  attributes.map((attr) => {
+    return {
+      name: attr.name,
+      value: attr.textValue?.[0].values.toString() || '',
+      // TODO: support for different types of attributes,
+      label: attr.description?.[0].value || '',
+    };
+  });
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function getAttributes(products, filterByAttributeName?: string[]): Record<string, AgnosticAttribute | string> {
   const isSingleProduct = !Array.isArray(products);
   const productList = isSingleProduct ? [products] : products;
 
@@ -77,15 +67,11 @@ function getAttributes(
 
   const formatAttributes = (product: Product): AgnosticAttribute[] =>
     formatAttributeList(product.attributes).filter((attribute) =>
-      filterByAttributeName
-        ? filterByAttributeName.includes(attribute.name)
-        : attribute
+      filterByAttributeName ? filterByAttributeName.includes(attribute.name) : attribute
     );
 
   const reduceToUniques = (prev, curr) => {
-    const isAttributeExist = prev.some(
-      (el) => el.name === curr.name && el.value === curr.value
-    );
+    const isAttributeExist = prev.some((el) => el.name === curr.name && el.value === curr.value);
 
     if (!isAttributeExist) {
       return [...prev, curr];
@@ -100,21 +86,10 @@ function getAttributes(
     .reduce(reduceToUniques, []);
 }
 
-const formatAttributeList = (attributes: Attribute[]): AgnosticAttribute[] =>
-  attributes.map((attr) => {
-    return {
-      name: attr.name,
-      value: attr.textValue?.[0].values.toString() || '',
-      label: attr.description?.[0].value || '', // TODO: support for different types of attributes,
-    };
-  });
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDescription(product: Product): string {
   return product?.description?.[0].value || '';
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShortDescription(product: Product): string {
   return product?.shortDescription?.[0].value || '';
 }
@@ -124,7 +99,6 @@ function getCategoryIds(product: Product): string[] {
   return [];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getId(product: Product): string {
   return product.classId.toString();
 }
@@ -144,29 +118,18 @@ function getAverageRating(product: Product): number {
   return 0;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getStatus(product: Product): string {
   return product.status;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getBundleProducts(product: Product): Bundle[] {
   return product?.bundles || [];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getCrossupsellProducts(
-  product: Product,
-  types: CrossupsellTypes
-): Crossupsell[] {
-  return (
-    product?.crossupsells?.filter((crossupsell) =>
-      types ? types.includes(crossupsell.type) : crossupsell
-    ) || []
-  );
+function getCrossupsellProducts(product: Product, types: CrossupsellTypes): Crossupsell[] {
+  return product?.crossupsells?.filter((crossupsell) => (types ? types.includes(crossupsell.type) : crossupsell)) || [];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getInventory(product: Product): number {
   return product?.inventory?.totalQuantity || 0;
 }

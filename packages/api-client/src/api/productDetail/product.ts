@@ -1,13 +1,8 @@
 import gql from 'graphql-tag';
-import {
-  ImageFragment,
-  AttributeFragment,
-  InventoryFragment,
-  ProductPriceFragment,
-} from '../../fragments';
+import { MediaImagesFragment, AttributeFragment, InventoryFragment, ProductPriceFragment } from '../../fragments';
 
 export default gql`
-  ${ImageFragment}
+  ${MediaImagesFragment}
   ${AttributeFragment}
   ${InventoryFragment}
   ${ProductPriceFragment}
@@ -15,7 +10,6 @@ export default gql`
     $productId: Int!
     $attributeFilters: AttributeFilterInput
     $crossupsellTypesInput: CrossupsellTypesInput
-    $siteId: Int!
     $language: String
   ) {
     product(id: $productId) {
@@ -49,8 +43,8 @@ export default gql`
         value
         language
       }
-      images(siteId: $siteId) {
-        ...Image
+      mediaImages(search: { sort: ASC }) {
+        ...MediaImages
       }
       price {
         ...ProductPrice
@@ -89,8 +83,8 @@ export default gql`
             inventory {
               totalQuantity
             }
-            images(siteId: $siteId) {
-              ...Image
+            mediaImages(search: { sort: ASC }) {
+              ...MediaImages
             }
             attributes(filter: $attributeFilters) {
               ...Attribute
@@ -134,8 +128,8 @@ export default gql`
           price {
             ...ProductPrice
           }
-          images(siteId: $siteId) {
-            ...Image
+          mediaImages(search: { sort: ASC }) {
+            ...MediaImages
           }
           attributes(filter: $attributeFilters) {
             ...Attribute

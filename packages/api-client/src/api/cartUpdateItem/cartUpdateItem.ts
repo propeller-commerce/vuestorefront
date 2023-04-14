@@ -3,12 +3,7 @@ import { CartFragment } from '../../fragments';
 
 export default gql`
   ${CartFragment}
-  mutation cartUpdateItem(
-    $input: CartUpdateItemInput!
-    $attributeFilters: AttributeFilterInput
-    $siteId: Int!
-    $language: String
-  ) {
+  mutation cartUpdateItem($input: CartUpdateItemInput!, $attributeFilters: AttributeFilterInput, $language: String) {
     cartUpdateItem(input: $input) {
       cart {
         ...Cart

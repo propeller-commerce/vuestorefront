@@ -4,18 +4,14 @@ import cartAddItemQuery from './cartAddItem';
 import { CartAddItemInput } from '../../types/Inputs';
 import { CartAddItemArguments } from '../../types/API';
 
-export default async (
-  context,
-  params: CartAddItemArguments,
-  customQuery?: CustomQuery
-) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default async (context, params: CartAddItemArguments, customQuery?: CustomQuery) => {
   const variables: CartAddItemInput = {
     input: {
       cartId: params.cartId,
       productId: params.productId,
       quantity: params.quantity,
     },
-    siteId: context.config.siteId,
     language: context.config?.siteLanguage || 'NL',
   };
 
