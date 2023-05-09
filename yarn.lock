@@ -2835,6 +2835,17 @@
   resolved "https://registry.npmjs.org/@polka/url/-/url-1.0.0-next.21.tgz"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
+"@propeller-commerce/propeller-api@1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@propeller-commerce/propeller-api/-/propeller-api-1.1.2.tgz#50c2576c15571fbc7d52c6f4a3c7bf9cb748610c"
+  integrity sha512-OFNuxMpQEp9FblRgyPb2fu2vpF8RgFY8LbUcU/mnI2nZlaGVWWZSkK7kJ27UrT43rWJ2NQNkRvEJ2U2r85to1g==
+  dependencies:
+    "@apollo/client" "^3.5.9"
+    "@vue-storefront/core" "~2.5.2"
+    cross-fetch "^3.1.4"
+    graphql "^16.0.1"
+    graphql-tag "^2.12.6"
+
 "@propeller-commerce/propeller-mollie@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@propeller-commerce/propeller-mollie/-/propeller-mollie-1.0.0.tgz#5f8b791d635d00293628f684743864b60816afe5"
@@ -2848,6 +2859,15 @@
     cross-fetch "^3.1.4"
     graphql "^16.0.1"
     graphql-tag "^2.12.6"
+
+"@propeller-commerce/propeller@1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@propeller-commerce/propeller/-/propeller-1.1.2.tgz#2334abeb1cf218bc36ebf931294263178e21845d"
+  integrity sha512-RnxDsPVhTeIfh6QgulVz6PXjdl8XrOFSzb6EF/K2FKH/ZTceu3fKCAJj1fQtIaGUO41VDcVBrMROnA+4LzkYHQ==
+  dependencies:
+    "@propeller-commerce/propeller-api" "1.1.2"
+    "@vue-storefront/core" "~2.5.2"
+    cookie-universal "^2.1.5"
 
 "@rollup/plugin-node-resolve@^13.0.6":
   version "13.3.0"

@@ -66,7 +66,7 @@ export enum AddressType {
 
 export type Attribute = {
   __typename?: 'Attribute';
-  id: Scalars['String'];
+  id: Scalars['Int'];
   name: Scalars['String'];
   searchId: Scalars['String'];
   description: Array<LocalizedString>;
@@ -118,6 +118,8 @@ export type AttributeFilterInput = {
   name?: Maybe<Array<Scalars['String']>>;
   type?: Maybe<Array<AttributeType>>;
   group?: Maybe<Array<Scalars['String']>>;
+  page?: Scalars['Int'];
+  offset?: Scalars['Int'];
 };
 
 export type AttributeIntegerRangeFilter = IAttributeIntegerRangeFilter & {

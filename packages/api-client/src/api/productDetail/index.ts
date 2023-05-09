@@ -9,8 +9,10 @@ export default async (context, params: ProductDetailArguments, customQuery?: Cus
   const variables: ProductInput = {
     productId: parseInt(params.id),
     attributeFilters: {
-      name: [],
+      // name: [],
       isPublic: true,
+      page: customQuery?.attributesPage ? parseInt(customQuery.attributesPage, 10) : 1,
+      offset: customQuery?.attributesOffset ? parseInt(customQuery.attributesOffset, 10) : 12,
     },
     language: context.config?.siteLanguage || 'NL',
   };

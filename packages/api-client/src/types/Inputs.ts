@@ -135,6 +135,8 @@ type CrossUpsellTypes = {
 export type AttributeFilterInput = {
   name?: [string?];
   isPublic?: boolean;
+  page?: number;
+  offset?: number;
 };
 
 export type AttributeFilter = {
