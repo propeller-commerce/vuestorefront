@@ -6,7 +6,7 @@ export default gql`
   ${AttributeFragment}
   ${InventoryFragment}
   ${ProductPriceFragment}
-  query bundle($bundleId: Float!, $language: String) {
+  query bundle($bundleId: Float!, $language: String, $attributesPage: Int, $attributesOffset: Int) {
     bundle(bundleId: $bundleId) {
       id
       comboId
@@ -63,7 +63,7 @@ export default gql`
           price {
             ...ProductPrice
           }
-          attributes(filter: { isPublic: true }) {
+          attributes(filter: { isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
             ...Attribute
           }
           inventory {

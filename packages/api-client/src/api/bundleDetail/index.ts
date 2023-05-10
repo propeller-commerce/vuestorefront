@@ -6,9 +6,14 @@ import { BundleDetailInput } from '../../types/Inputs';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async (context, params: BundleDetailArguments, customQuery?: CustomQuery) => {
-  const variables: BundleDetailInput = {
+  const variables: BundleDetailInput & {
+    attributesPage: number;
+    attributesOffset: number;
+  } = {
     bundleId: parseInt(params.bundleId),
     language: context.config?.siteLanguage || 'NL',
+    attributesPage: customQuery?.attributesPage ? parseInt(customQuery.attributesPage, 10) : 1,
+    attributesOffset: customQuery?.attributesOffset ? parseInt(customQuery.attributesOffset, 10) : 50,
   };
 
   if (context.config.productListAttributes)
