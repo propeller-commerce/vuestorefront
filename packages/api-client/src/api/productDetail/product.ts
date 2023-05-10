@@ -11,6 +11,8 @@ export default gql`
     $attributeFilters: AttributeFilterInput
     $crossupsellTypesInput: CrossupsellTypesInput
     $language: String
+    $attributesPage: Int
+    $attributesOffset: Int
   ) {
     product(id: $productId) {
       id
@@ -49,7 +51,7 @@ export default gql`
       price {
         ...ProductPrice
       }
-      attributes(filter: { isPublic: true }) {
+      attributes(filter: { isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
         ...Attribute
       }
       bundles {

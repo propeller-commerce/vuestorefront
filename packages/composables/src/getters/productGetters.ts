@@ -48,9 +48,11 @@ function getFiltered(products: Product[], filters: ProductFilter): Product[] {
 
 const formatAttributeList = (attributes: Attribute[]): AgnosticAttribute[] =>
   attributes.map((attr) => {
+    const [firstTextValue] = attr?.textValue ?? [];
+
     return {
       name: attr.name,
-      value: attr.textValue?.[0].values.toString() || '',
+      value: firstTextValue?.values?.toString() ?? '',
       // TODO: support for different types of attributes,
       label: attr.description?.[0].value || '',
     };

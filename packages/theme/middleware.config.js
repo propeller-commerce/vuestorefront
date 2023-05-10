@@ -14,6 +14,8 @@ module.exports = {
         siteLanguage: 'NL',
         catalogueRoot: 100092,
         productListAttributes: ['EXAMEN_MERK', 'EXAMEN_ONDERWIJSTYPE'],
+        defaultAttributesPage: 1,
+        defaultAttributesOffset: 50,
         // crossupsellTypes: [ACCESSORIES, RELATED],
       },
     },
