@@ -6,12 +6,18 @@ import { ProductsArguments } from '../../types/API';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async (context, params: ProductsArguments, customQuery?: CustomQuery) => {
-  const variables: ProductsInput = {
+  const variables: ProductsInput & {
+    attributesPage: number;
+    attributesOffset: number;
+  } = {
     slug: params.categorySlug,
     offset: params.offset <= 0 ? 12 : params.offset,
     page: params.page <= 0 ? 1 : params.page,
     language: context.config?.siteLanguage || 'NL',
+    attributesPage: customQuery?.attributesPage ? parseInt(customQuery.attributesPage, 10) : 1,
+    attributesOffset: customQuery?.attributesOffset ? parseInt(customQuery.attributesOffset, 10) : 50,
   };
+  // make attributesPage and atrributesOffset part of variable.attributeFilters ?
 
   if (context.config.productListAttributes)
     variables.attributeFilters = {

@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
-import { MediaImagesFragment, AttributeFragment, InventoryFragment, ProductPriceFragment } from '../../fragments';
+import { MediaImagesFragment, AttributeValueFragment, InventoryFragment, ProductPriceFragment } from '../../fragments';
 
 export default gql`
   ${MediaImagesFragment}
-  ${AttributeFragment}
+  ${AttributeValueFragment}
   ${InventoryFragment}
   ${ProductPriceFragment}
   query bundle($bundleId: Float!, $language: String, $attributesPage: Int, $attributesOffset: Int) {
@@ -63,8 +63,8 @@ export default gql`
           price {
             ...ProductPrice
           }
-          attributes(filter: { isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
-            ...Attribute
+          attributeValues(filter: { isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
+            ...AttributeValue
           }
           inventory {
             ...Inventory

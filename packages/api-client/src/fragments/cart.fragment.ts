@@ -1,10 +1,10 @@
 import gql from 'graphql-tag';
 import { MediaImagesFragment } from './mediaImages.fragment';
-import { AttributeFragment } from './attribute.fragment';
+import { AttributeValueFragment } from './attributeValue.fragment';
 
 export const CartFragment = gql`
   ${MediaImagesFragment}
-  ${AttributeFragment}
+  ${AttributeValueFragment}
   fragment Cart on Cart {
     cartId
     userId
@@ -61,8 +61,8 @@ export const CartFragment = gql`
         mediaImages(search: { sort: ASC }) {
           ...MediaImages
         }
-        attributes(filter: $attributeFilters) {
-          ...Attribute
+        attributeValues(filter:{ isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
+          ...AttributeValue
         }
         inventory {
           totalQuantity
@@ -102,8 +102,8 @@ export const CartFragment = gql`
             mediaImages(search: { sort: ASC }) {
               ...MediaImages
             }
-            attributes(filter: $attributeFilters) {
-              ...Attribute
+            attributeValues(filter: { isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
+              ...AttributeValue
             }
           }
         }
