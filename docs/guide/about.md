@@ -1,6 +1,5 @@
 # About
 
-
 ## Resources
 
 - [Vue Storefront Documentation](https://docs.vuestorefront.io/v2/)
