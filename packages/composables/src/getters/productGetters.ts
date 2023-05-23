@@ -24,7 +24,7 @@ function getPrice(product: Product): AgnosticPrice {
 
 function getGallery(product: Product): AgnosticMediaGalleryItem[] {
   const images = [];
-  const imageVariants = product?.mediaImages?.items || [];
+  const imageVariants = product?.media?.images?.items || [];
 
   for (const galleryItem of imageVariants) {
     images.push({
@@ -38,7 +38,7 @@ function getGallery(product: Product): AgnosticMediaGalleryItem[] {
 }
 
 function getCoverImage(product: Product): string {
-  return product.mediaImages?.items?.[0]?.imageVariants?.[0]?.url || '';
+  return product.media?.images?.items?.[0]?.imageVariants?.[0]?.url || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -102,7 +102,7 @@ function getCategoryIds(product: Product): string[] {
 }
 
 function getId(product: Product): string {
-  return product.classId.toString();
+  return product.productId.toString();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -129,7 +129,25 @@ function getBundleProducts(product: Product): Bundle[] {
 }
 
 function getCrossupsellProducts(product: Product, types: CrossupsellTypes): Crossupsell[] {
-  return product?.crossupsells?.filter((crossupsell) => (types ? types.includes(crossupsell.type) : crossupsell)) || [];
+  return product?.crossupsells?.filter((crossupsell:Crossupsell) => (types ? types.includes(crossupsell.type) : crossupsell))
+    .map((crossupsell:Crossupsell) => {
+
+      // Add additional properties from the product object to the item
+      // used in RelatedProducts.vue
+      const additionalProperties = {
+        media: product.media,
+        price: product.price,
+        productId: crossupsell.productId
+      };
+
+      return {
+        ...crossupsell,
+        item: {
+          ...crossupsell.item,
+          ...additionalProperties
+        }
+      };
+    }) || [];
 }
 
 function getInventory(product: Product): number {

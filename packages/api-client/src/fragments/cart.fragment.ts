@@ -58,8 +58,10 @@ export const CartFragment = gql`
           language
           value
         }
-        mediaImages(search: { sort: ASC }) {
-          ...MediaImages
+        media {
+          images(search: { sort: ASC }){
+            ...MediaImages
+          }
         }
         attributeValues(filter:{ isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
           ...AttributeValue
@@ -99,8 +101,10 @@ export const CartFragment = gql`
             inventory {
               totalQuantity
             }
-            mediaImages(search: { sort: ASC }) {
-              ...MediaImages
+            media {
+              images(search: { sort: ASC }){
+                ...MediaImages
+              }
             }
             attributeValues(filter: { isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
               ...AttributeValue

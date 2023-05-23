@@ -53,7 +53,6 @@ export default gql`
         }
         items {
           sku
-          path
           name(language: $language) {
             value
             language
@@ -72,7 +71,7 @@ export default gql`
           }
           ... on Product {
             id
-            classId
+            productId
             shortName
             manufacturerCode
             eanCode
@@ -82,13 +81,15 @@ export default gql`
             class
             status
             isOrderable
-            mediaImages(search: { sort: ASC }) {
-              ...MediaImages
+            media {
+              images(search: { sort: ASC }){
+                ...MediaImages
+              }
             }
             price {
               ...ProductPrice
             }
-            attributeValues(filter:{ isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
+            attributeValues(filter: $attributeFilters) {
               ...AttributeValue
             }
             inventory {

@@ -1,11 +1,14 @@
 import gql from 'graphql-tag';
 
 export const AttributeValueFragment = gql`
-  fragment AttributeValue on AttributeValue {
-    items: {
+  fragment AttributeValue on AttributeValueResponse {
+    items {
       attributeId
-      textValue
-      attributeDescription {
+      textValue (language: $language) {
+        language
+        values
+      }
+      attributeDescription{
         name
         searchId
         description {
@@ -14,5 +17,11 @@ export const AttributeValueFragment = gql`
         }
       }
     }
+    itemsFound
+    offset
+    page
+    pages
+    start
+    end
   }
 `;

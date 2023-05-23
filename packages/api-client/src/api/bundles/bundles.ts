@@ -96,10 +96,12 @@ export default gql`
                   inventory {
                     ...Inventory
                   }
-                  mediaImages(search: { sort: ASC }) {
-                    ...MediaImages
+                  media {
+                    images(search: { sort: ASC }){
+                      ...MediaImages
+                    }
                   }
-                  attributeValues(filter: { isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
+                  attributeValues(filter: $attributeFilters) {
                     ...AttributeValue
                   }
                 }

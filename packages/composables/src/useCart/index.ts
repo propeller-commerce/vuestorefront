@@ -7,7 +7,9 @@ import type {
   Cart,
   CartBaseItem as CartItem,
   Product,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CartAddItemInput,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CartAddBundleInput,
 } from '@propeller-commerce/propeller-api';
 
@@ -35,6 +37,7 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (
     context: Context,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     { currentCart, product, quantity, customQuery }
   ) => {
     // TODO: temp
@@ -74,7 +77,7 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
     } else {
       const cartAddItemInput = {
         cartId: existngCartId,
-        productId: product.classId,
+        productId: product.productId,
         quantity,
       };
 
@@ -88,6 +91,7 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (
     context: Context,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     { currentCart, product, customQuery }
   ) => {
     const cartDeleteItemInput = {
@@ -106,6 +110,7 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateItemQty: async (
     context: Context,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     { currentCart, product, quantity, customQuery }
   ) => {
     const cartUpdateItemInput = {
@@ -133,6 +138,7 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   applyCoupon: async (
     context: Context,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     { currentCart, couponCode, customQuery }
   ) => {
     const cartAddActionCodeInput = {
@@ -153,6 +159,7 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeCoupon: async (
     context: Context,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     { currentCart, couponCode, customQuery }
   ) => {
     const cartRemoveActionCodeInput = {
@@ -172,9 +179,9 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isInCart: (context: Context, { currentCart, product }) =>
-    !!currentCart?.items?.find(
-      (cartItem) => cartItem.productId === product.classId
-    ),
+    Boolean(currentCart?.items?.find(
+      (cartItem) => cartItem.productId === product.productId
+    )),
 };
 
 export const useCart = useCartFactory<Cart, CartItem, Product>(params);

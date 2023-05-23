@@ -31,7 +31,7 @@ export default gql`
         }
         product {
           id
-          classId
+          productId
           categoryId
           sku
           shortName
@@ -69,8 +69,10 @@ export default gql`
           inventory {
             ...Inventory
           }
-          mediaImages(search: { sort: ASC }) {
-            ...MediaImages
+          media {
+            images(search: { sort: ASC }){
+              ...MediaImages
+            }
           }
         }
       }

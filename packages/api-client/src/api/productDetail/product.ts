@@ -16,7 +16,7 @@ export default gql`
   ) {
     product(id: $productId) {
       id
-      classId
+      productId
       categoryId
       sku
       shortName
@@ -45,8 +45,10 @@ export default gql`
         value
         language
       }
-      mediaImages(search: { sort: ASC }) {
-        ...MediaImages
+      media {
+        images(search: { sort: ASC }){
+          ...MediaImages
+        }
       }
       price {
         ...ProductPrice
@@ -85,10 +87,12 @@ export default gql`
             inventory {
               totalQuantity
             }
-            mediaImages(search: { sort: ASC }) {
-              ...MediaImages
+            media {
+              images(search: { sort: ASC }){
+                ...MediaImages
+              }
             }
-            attributeValues(filter: { isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
+            attributeValues(filter: $attributeFilters) {
               ...AttributeValue
             }
           }
@@ -97,20 +101,12 @@ export default gql`
       crossupsells(input: $crossupsellTypesInput) {
         type
         subtype
-        product {
+        item {
           id
-          classId
           categoryId
+          language
+          defaultLanguage
           sku
-          shortName
-          eanCode
-          manufacturer
-          manufacturerCode
-          supplier
-          supplierCode
-          status
-          isOrderable
-          unit
           name(language: $language) {
             value
             language
@@ -126,15 +122,6 @@ export default gql`
           shortDescription(language: $language) {
             value
             language
-          }
-          price {
-            ...ProductPrice
-          }
-          mediaImages(search: { sort: ASC }) {
-            ...MediaImages
-          }
-          attributeValues(filter: { isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
-            ...AttributeValue
           }
         }
       }
