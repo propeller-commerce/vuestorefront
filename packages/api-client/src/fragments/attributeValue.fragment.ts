@@ -11,7 +11,7 @@ export const AttributeValueFragment = gql`
       attributeDescription{
         name
         searchId
-        description {
+        description(language: $language) {
           value
           language
         }
