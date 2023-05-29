@@ -63,7 +63,7 @@ export const CartFragment = gql`
             ...MediaImages
           }
         }
-        attributeValues(filter:{ isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
+        attributeValues(filter: $attributeFilters) {
           ...AttributeValue
         }
         inventory {
@@ -106,7 +106,7 @@ export const CartFragment = gql`
                 ...MediaImages
               }
             }
-            attributeValues(filter: { isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
+            attributeValues(filter: $attributeFilters) {
               ...AttributeValue
             }
           }
