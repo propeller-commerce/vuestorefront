@@ -129,25 +129,7 @@ function getBundleProducts(product: Product): Bundle[] {
 }
 
 function getCrossupsellProducts(product: Product, types: CrossupsellTypes): Crossupsell[] {
-  return product?.crossupsells?.filter((crossupsell: Crossupsell) => (types ? types.includes(crossupsell.type) : crossupsell))
-    .map((crossupsell: Crossupsell) => {
-
-      // Add additional properties from the product object to the item
-      // used in RelatedProducts.vue
-      const additionalProperties = {
-        media: product.media,
-        price: product.price,
-        productId: crossupsell.productId
-      };
-
-      return {
-        ...crossupsell,
-        item: {
-          ...crossupsell.item,
-          ...additionalProperties
-        }
-      };
-    }) || [];
+  return product?.crossupsells?.filter((crossupsell) => (types ? types.includes(crossupsell.type) : crossupsell)) || [];
 }
 
 function getInventory(product: Product): number {

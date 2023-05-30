@@ -123,6 +123,33 @@ export default gql`
             value
             language
           }
+          ... on Product {
+            id
+            productId
+            shortName
+            manufacturerCode
+            eanCode
+            manufacturer
+            supplier
+            supplierCode
+            class
+            status
+            isOrderable
+            media {
+              images(search: { sort: ASC }){
+                ...MediaImages
+              }
+            }
+            price {
+              ...ProductPrice
+            }
+            attributeValues(filter: $attributeFilters) {
+              ...AttributeValue
+            }
+            inventory {
+              ...Inventory
+            }
+          } 
         }
       }
       inventory {
