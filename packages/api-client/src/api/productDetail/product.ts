@@ -124,7 +124,6 @@ export default gql`
             language
           }
           ... on Product {
-            id
             productId
             shortName
             manufacturerCode
@@ -145,9 +144,6 @@ export default gql`
             }
             attributeValues(filter: $attributeFilters) {
               ...AttributeValue
-            }
-            inventory {
-              ...Inventory
             }
           } 
         }
