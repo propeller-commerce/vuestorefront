@@ -54,7 +54,7 @@ const formatAttributeList = (attributes: AttributeValue[]): AgnosticAttribute[] 
       name: attr.attributeDescription.name,
       value: firstTextValue?.values?.toString() ?? '',
       // TODO: support for different types of attributes,
-      label: attr.attributeDescription?.[0].value || '',
+      label: attr.attributeDescription?.description?.[0].value || ''
     };
   });
 
@@ -129,8 +129,8 @@ function getBundleProducts(product: Product): Bundle[] {
 }
 
 function getCrossupsellProducts(product: Product, types: CrossupsellTypes): Crossupsell[] {
-  return product?.crossupsells?.filter((crossupsell:Crossupsell) => (types ? types.includes(crossupsell.type) : crossupsell))
-    .map((crossupsell:Crossupsell) => {
+  return product?.crossupsells?.filter((crossupsell: Crossupsell) => (types ? types.includes(crossupsell.type) : crossupsell))
+    .map((crossupsell: Crossupsell) => {
 
       // Add additional properties from the product object to the item
       // used in RelatedProducts.vue
