@@ -11,11 +11,11 @@
           :key="i"
         >
           <SfProductCard
-            :title="productGetters.getName(crossupsell.product)"
-            :image="productGetters.getCoverImage(crossupsell.product)"
+            :title="productGetters.getName(crossupsell.item)"
+            :image="productGetters.getCoverImage(crossupsell.item)"
             :regular-price="
               $n(
-                productGetters.getPrice(crossupsell.product).regular,
+                productGetters.getPrice(crossupsell.item).regular,
                 'currency'
               )
             "
@@ -24,13 +24,13 @@
             :link="
               localePath(
                 `/p/${productGetters.getId(
-                  crossupsell.product
-                )}/${productGetters.getSlug(crossupsell.product)}`
+                  crossupsell.item
+                )}/${productGetters.getSlug(crossupsell.item)}`
               )
             "
             class="product-card"
             @click:add-to-cart="
-              addItemToCart({ product: crossupsell.product, quantity: 1 })
+              addItemToCart({ product: crossupsell.item, quantity: 1 })
             "
           />
         </SfCarouselItem>
@@ -48,11 +48,11 @@ import {
 } from '@storefront-ui/vue';
 import {
   productGetters,
-  useWishlist,
-  wishlistGetters,
+  useWishlist, // eslint-disable-line @typescript-eslint/no-unused-vars, no-unused-vars
+  wishlistGetters, // eslint-disable-line @typescript-eslint/no-unused-vars, no-unused-vars
   useCart,
 } from '@propeller-commerce/propeller';
-import { computed } from '@vue/composition-api';
+import { computed } from '@vue/composition-api'; // eslint-disable-line @typescript-eslint/no-unused-vars, no-unused-vars
 import { addBasePath } from '@vue-storefront/core';
 
 export default {

@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
-import { MediaImagesFragment, AttributeFragment, InventoryFragment, ProductPriceFragment } from '../../fragments';
+import { MediaImagesFragment, AttributeValueFragment, InventoryFragment, ProductPriceFragment } from '../../fragments';
 
 export default gql`
   ${MediaImagesFragment}
-  ${AttributeFragment}
+  ${AttributeValueFragment}
   ${InventoryFragment}
   ${ProductPriceFragment}
   query productDetails(
@@ -16,7 +16,7 @@ export default gql`
   ) {
     product(id: $productId) {
       id
-      classId
+      productId
       categoryId
       sku
       shortName
@@ -45,14 +45,16 @@ export default gql`
         value
         language
       }
-      mediaImages(search: { sort: ASC }) {
-        ...MediaImages
+      media {
+        images(search: { sort: ASC }){
+          ...MediaImages
+        }
       }
       price {
         ...ProductPrice
       }
-      attributes(filter: { isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
-        ...Attribute
+      attributeValues(filter: { isPublic: true, page: $attributesPage, offset: $attributesOffset }) {
+        ...AttributeValue
       }
       bundles {
         id
@@ -85,11 +87,13 @@ export default gql`
             inventory {
               totalQuantity
             }
-            mediaImages(search: { sort: ASC }) {
-              ...MediaImages
+            media {
+              images(search: { sort: ASC }){
+                ...MediaImages
+              }
             }
-            attributes(filter: $attributeFilters) {
-              ...Attribute
+            attributeValues(filter: $attributeFilters) {
+              ...AttributeValue
             }
           }
         }
@@ -97,20 +101,12 @@ export default gql`
       crossupsells(input: $crossupsellTypesInput) {
         type
         subtype
-        product {
+        item {
           id
-          classId
           categoryId
+          language
+          defaultLanguage
           sku
-          shortName
-          eanCode
-          manufacturer
-          manufacturerCode
-          supplier
-          supplierCode
-          status
-          isOrderable
-          unit
           name(language: $language) {
             value
             language
@@ -127,15 +123,29 @@ export default gql`
             value
             language
           }
-          price {
-            ...ProductPrice
-          }
-          mediaImages(search: { sort: ASC }) {
-            ...MediaImages
-          }
-          attributes(filter: $attributeFilters) {
-            ...Attribute
-          }
+          ... on Product {
+            productId
+            shortName
+            manufacturerCode
+            eanCode
+            manufacturer
+            supplier
+            supplierCode
+            class
+            status
+            isOrderable
+            media {
+              images(search: { sort: ASC }){
+                ...MediaImages
+              }
+            }
+            price {
+              ...ProductPrice
+            }
+            attributeValues(filter: $attributeFilters) {
+              ...AttributeValue
+            }
+          } 
         }
       }
       inventory {

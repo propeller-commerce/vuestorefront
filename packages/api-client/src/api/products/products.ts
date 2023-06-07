@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
-import { MediaImagesFragment, AttributeFragment, InventoryFragment, ProductPriceFragment } from '../../fragments';
+import { MediaImagesFragment, AttributeValueFragment, InventoryFragment, ProductPriceFragment } from '../../fragments';
 
 export default gql`
   ${MediaImagesFragment}
-  ${AttributeFragment}
+  ${AttributeValueFragment}
   ${InventoryFragment}
   ${ProductPriceFragment}
   query products(
@@ -53,7 +53,6 @@ export default gql`
         }
         items {
           sku
-          path
           name(language: $language) {
             value
             language
@@ -72,7 +71,7 @@ export default gql`
           }
           ... on Product {
             id
-            classId
+            productId
             shortName
             manufacturerCode
             eanCode
@@ -82,14 +81,16 @@ export default gql`
             class
             status
             isOrderable
-            mediaImages(search: { sort: ASC }) {
-              ...MediaImages
+            media {
+              images(search: { sort: ASC }){
+                ...MediaImages
+              }
             }
             price {
               ...ProductPrice
             }
-            attributes(filter: $attributeFilters) {
-              ...Attribute
+            attributeValues(filter: $attributeFilters) {
+              ...AttributeValue
             }
             inventory {
               ...Inventory

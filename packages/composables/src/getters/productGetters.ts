@@ -1,5 +1,5 @@
 import { AgnosticMediaGalleryItem, AgnosticAttribute, AgnosticPrice, ProductGetters } from '@vue-storefront/core';
-import type { Product, Bundle, Crossupsell, CrossupsellTypes, Attribute } from '@propeller-commerce/propeller-api';
+import type { Product, Bundle, Crossupsell, CrossupsellTypes, AttributeValue } from '@propeller-commerce/propeller-api';
 
 type ProductFilter = any;
 
@@ -24,7 +24,7 @@ function getPrice(product: Product): AgnosticPrice {
 
 function getGallery(product: Product): AgnosticMediaGalleryItem[] {
   const images = [];
-  const imageVariants = product?.mediaImages?.items || [];
+  const imageVariants = product?.media?.images?.items || [];
 
   for (const galleryItem of imageVariants) {
     images.push({
@@ -38,7 +38,7 @@ function getGallery(product: Product): AgnosticMediaGalleryItem[] {
 }
 
 function getCoverImage(product: Product): string {
-  return product.mediaImages?.items?.[0]?.imageVariants?.[0]?.url || '';
+  return product.media?.images?.items?.[0]?.imageVariants?.[0]?.url || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -46,15 +46,15 @@ function getFiltered(products: Product[], filters: ProductFilter): Product[] {
   return products;
 }
 
-const formatAttributeList = (attributes: Attribute[]): AgnosticAttribute[] =>
-  attributes.map((attr) => {
+const formatAttributeList = (attributes: AttributeValue[]): AgnosticAttribute[] =>
+  attributes.map((attr: AttributeValue) => {
     const [firstTextValue] = attr?.textValue ?? [];
 
     return {
-      name: attr.name,
+      name: attr.attributeDescription.name,
       value: firstTextValue?.values?.toString() ?? '',
       // TODO: support for different types of attributes,
-      label: attr.description?.[0].value || '',
+      label: attr.attributeDescription?.description?.[0].value || ''
     };
   });
 
@@ -63,12 +63,12 @@ function getAttributes(products, filterByAttributeName?: string[]): Record<strin
   const isSingleProduct = !Array.isArray(products);
   const productList = isSingleProduct ? [products] : products;
 
-  if (!products || !products?.attributes || productList.length === 0) {
+  if (!products || !products?.attributeValues || productList.length === 0) {
     return {} as any;
   }
 
   const formatAttributes = (product: Product): AgnosticAttribute[] =>
-    formatAttributeList(product.attributes).filter((attribute) =>
+    formatAttributeList(product.attributeValues.items).filter((attribute: AgnosticAttribute) =>
       filterByAttributeName ? filterByAttributeName.includes(attribute.name) : attribute
     );
 
@@ -102,7 +102,7 @@ function getCategoryIds(product: Product): string[] {
 }
 
 function getId(product: Product): string {
-  return product.classId.toString();
+  return product.productId.toString();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

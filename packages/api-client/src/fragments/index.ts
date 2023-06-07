@@ -1,4 +1,4 @@
-export { AttributeFragment } from './attribute.fragment';
+export { AttributeValueFragment } from './attributeValue.fragment';
 export { CartFragment } from './cart.fragment';
 export { MediaImagesFragment } from './mediaImages.fragment';
 export { InventoryFragment } from './inventory.fragment';
