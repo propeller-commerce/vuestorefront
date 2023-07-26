@@ -35,7 +35,8 @@ export default async (context, params: ProductDetailArguments, customQuery?: Cus
   });
 
   try {
-    return context.client.query({
+    // wihout 'await' it never reaches the catch block
+    return await context.client.query({
       query: gql`
         ${product.query}
       `,
@@ -43,7 +44,8 @@ export default async (context, params: ProductDetailArguments, customQuery?: Cus
     });
   } catch (error) {
     // For error in data we don't throw 500, because it's not server error
-    if (error.graphQLErrors) {
+    if (error.graphQLErrors.length > 0) {
+      Logger.debug(error);
       return {
         ...error,
         errors: error.graphQLErrors,

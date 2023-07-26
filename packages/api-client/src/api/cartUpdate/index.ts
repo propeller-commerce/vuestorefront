@@ -31,19 +31,16 @@ export default async (context, params: CartUpdate, customQuery?: CustomQuery) =>
   });
 
   try {
-    return context.client.mutate({
+    // wihout 'await' it never reaches the catch block
+    return await context.client.mutate({
       mutation: gql`
         ${cartUpdate.query}
       `,
       variables: cartUpdate.variables,
     });
   } catch (error) {
-    console.log('Error updating cart');
-    console.log(error);
     // For error in data we don't throw 500, because it's not server error
-    if (error.graphQLErrors) {
-      console.log('Error updating cart');
-      console.log(error);
+    if (error.graphQLErrors.length > 0) {
       Logger.debug(error);
 
       return {

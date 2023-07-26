@@ -1,16 +1,16 @@
 // Composables
-export { useBilling } from './useBilling';
-export { useCart } from './useCart';
-export { useCategory } from './useCategory';
+export { useBilling, errorsBilling } from './useBilling';
+export { useCart, errorsCart } from './useCart';
+export { useCategory, errorsCategory } from './useCategory';
 export { useContent } from './useContent';
-export { useFacet } from './useFacet';
+export { useFacet, errorsFacet } from './useFacet';
 export { useForgotPassword } from './useForgotPassword';
-export { useMakeOrder } from './useMakeOrder';
-export { useProduct } from './useProduct';
+export { useMakeOrder, errorsMakeOrder } from './useMakeOrder';
+export { useProduct, errorsProduct } from './useProduct';
 export { useReview } from './useReview';
-export { useShipping } from './useShipping';
+export { useShipping, errorsShipping } from './useShipping';
 export { useShippingProvider } from './useShippingProvider';
-export { useStore } from './useStore';
+export { useStore, } from './useStore';
 export { useUser } from './useUser';
 export { useUserBilling } from './useUserBilling';
 export { useUserOrder } from './useUserOrder';
