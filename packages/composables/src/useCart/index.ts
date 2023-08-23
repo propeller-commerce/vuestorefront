@@ -12,10 +12,11 @@ import type {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CartAddBundleInput,
 } from '@propeller-commerce/propeller-api';
+import { ref } from '@nuxtjs/composition-api';
 
 // TODO - merge bundle and product
 type ProductTemp = any;
-
+const serverErrors = ref([]);
 const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
@@ -27,9 +28,12 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
     const existngCartId =
       context.$propeller.config.app.cookies.get(cartCookieName);
 
+    serverErrors.value = [];
+
     if (!existngCartId) return {};
 
     const cart = await context.$propeller.api.cart(existngCartId);
+    serverErrors.value.push(...cart.errors || []);
 
     return cart?.data?.cart;
   },
@@ -47,6 +51,8 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
     // check if cart is already initiated
     let existngCartId =
       context.$propeller.config.app.cookies.get(cartCookieName);
+
+    serverErrors.value = [];
 
     if (!existngCartId) {
       // initiate cart
@@ -71,6 +77,7 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
       const cart = await context.$propeller.api.cartAddBundle(
         cartAddBundleInput
       );
+      serverErrors.value.push(...cart.errors || []);
 
       // eslint-disable-next-line consistent-return
       return cart.data.cartAddBundle.cart as unknown as Cart;
@@ -83,6 +90,8 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
 
       const cart = await context.$propeller.api.cartAddItem(cartAddItemInput);
 
+      serverErrors.value.push(...cart.errors || []);
+
       // eslint-disable-next-line consistent-return
       return cart.data.cartAddItem.cart as unknown as Cart;
     }
@@ -94,14 +103,17 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     { currentCart, product, customQuery }
   ) => {
+    serverErrors.value = [];
     const cartDeleteItemInput = {
       cartId: currentCart.cartId,
       itemId: product.id,
     };
 
-    const { data } = await context.$propeller.api.cartDeleteItem(
+    const { data, errors } = await context.$propeller.api.cartDeleteItem(
       cartDeleteItemInput
     );
+
+    serverErrors.value.push(...errors || []);
 
     return data.cartDeleteItem.cart as unknown as Cart;
   },
@@ -113,15 +125,17 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     { currentCart, product, quantity, customQuery }
   ) => {
+    serverErrors.value = [];
     const cartUpdateItemInput = {
       cartId: currentCart.cartId,
       itemId: product.id,
       quantity,
     };
 
-    const { data } = await context.$propeller.api.cartUpdateItem(
+    const { data, errors } = await context.$propeller.api.cartUpdateItem(
       cartUpdateItemInput
     );
+    serverErrors.value.push(...errors || []);
 
     return data.cartUpdateItem.cart as unknown as Cart;
   },
@@ -141,14 +155,16 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     { currentCart, couponCode, customQuery }
   ) => {
+    serverErrors.value = [];
     const cartAddActionCodeInput = {
       cartId: currentCart.cartId,
       actionCode: couponCode,
     };
 
-    const { data } = await context.$propeller.api.cartAddActionCode(
+    const { data, errors } = await context.$propeller.api.cartAddActionCode(
       cartAddActionCodeInput
     );
+    serverErrors.value.push(...errors || []);
 
     return {
       updatedCart: data.cartAddActionCode.cart as unknown as Cart,
@@ -162,14 +178,16 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     { currentCart, couponCode, customQuery }
   ) => {
+    serverErrors.value = [];
     const cartRemoveActionCodeInput = {
       cartId: currentCart.cartId,
       actionCode: currentCart.actionCode,
     };
 
-    const { data } = await context.$propeller.api.cartRemoveActionCode(
+    const { data, errors } = await context.$propeller.api.cartRemoveActionCode(
       cartRemoveActionCodeInput
     );
+    serverErrors.value.push(...errors || []);
 
     return {
       updatedCart: data.cartRemoveActionCode.cart as unknown as Cart,
@@ -185,3 +203,4 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
 };
 
 export const useCart = useCartFactory<Cart, CartItem, Product>(params);
+export const errorsCart = serverErrors;

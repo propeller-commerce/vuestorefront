@@ -17,6 +17,7 @@ export default async (context, params, customQuery?: CustomQuery) => {
   });
 
   try {
+    // wihout 'await' it never reaches the catch block
     return await context.client.query({
       query: gql`
         ${category.query}
@@ -25,11 +26,8 @@ export default async (context, params, customQuery?: CustomQuery) => {
     });
   } catch (error) {
     // For error in data we don't throw 500, because it's not server error
-    if (error.graphQLErrors) {
-      console.log('Error in categories');
-      console.log(error);
+    if (error.graphQLErrors.length > 0) {
       Logger.debug(error);
-
       return {
         ...error,
         errors: error.graphQLErrors,

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import bundlesQuery from './bundles';
-import { CustomQuery } from '@vue-storefront/core';
+import { Logger, CustomQuery } from '@vue-storefront/core';
 import { ProductsInput, YesNo } from '../../types/Inputs';
 import { ProductsArguments } from '../../types/API';
 
@@ -33,6 +33,7 @@ export default async (context, params: ProductsArguments, customQuery?: CustomQu
   });
 
   try {
+    // wihout 'await' it never reaches the catch block
     return await context.client.query({
       query: gql`
         ${bundles.query}
@@ -40,6 +41,16 @@ export default async (context, params: ProductsArguments, customQuery?: CustomQu
       variables: bundles.variables,
     });
   } catch (error) {
-    throw error.graphQLErrors?.[0].message || error.networkError?.result || error;
+    // For error in data we don't throw 500, because it's not server error
+    if (error.graphQLErrors.length > 0) {
+      Logger.debug(error);
+      return {
+        ...error,
+        errors: error.graphQLErrors,
+        data: null,
+      };
+    }
+    Logger.error(error);
+    throw error.networkError?.result || error;
   }
 };

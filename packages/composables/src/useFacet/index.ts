@@ -1,5 +1,8 @@
 import { Context, useFacetFactory, FacetSearchResult } from '@vue-storefront/core';
 import type { UseFacetSearchParams as SearchParams } from '../types';
+import { ref } from '@nuxtjs/composition-api';
+
+const serverErrors = ref([]);
 
 const availableSortingOptions = [
   {
@@ -96,6 +99,7 @@ const constructSortObject = (sortData: string) => {
 const factoryParams = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   search: async (context: Context, params: FacetSearchResult<any>) => {
+    serverErrors.value = [];
     const offset = params.input.offset ? params.input.offset : 12;
     const page = params.input.page ? params.input.page : 1;
     const inputFilters = params.input.filters ? params.input.filters : {};
@@ -121,10 +125,11 @@ const factoryParams = {
       sort: productParams.sort,
     };
 
-    const { data } = hasBundle
+    const { data, errors } = hasBundle
       ? await context.$propeller.api.bundles(productSearchParams)
       : await context.$propeller.api.products(productSearchParams);
 
+    serverErrors.value.push(...errors || []);
     return {
       items: data?.category?.products?.items || [],
       total: data?.category?.products?.itemsFound,
@@ -140,3 +145,4 @@ const factoryParams = {
 };
 
 export const useFacet = useFacetFactory<SearchParams>(factoryParams);
+export const errorsFacet = serverErrors;

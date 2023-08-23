@@ -27,21 +27,17 @@ export default async (context, params: CartDeleteItemArguments, customQuery?: Cu
   });
 
   try {
-    return context.client.mutate({
+    // wihout 'await' it never reaches the catch block
+    return await context.client.mutate({
       mutation: gql`
         ${cartDeleteItem.query}
       `,
       variables: cartDeleteItem.variables,
     });
   } catch (error) {
-    console.log('Error deleting item');
-    console.log(error);
     // For error in data we don't throw 500, because it's not server error
-    if (error.graphQLErrors) {
-      console.log('Error deleting item');
-      console.log(error);
+    if (error.graphQLErrors.length > 0) {
       Logger.debug(error);
-
       return {
         ...error,
         errors: error.graphQLErrors,
