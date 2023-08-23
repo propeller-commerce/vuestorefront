@@ -1,3 +1,4 @@
+/* eslint-disable lines-around-comment */
 /* eslint-disable no-use-before-define */
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -7,7 +8,6 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
   { [SubKey in K]?: Maybe<T[SubKey]> }
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
   { [SubKey in K]: Maybe<T[SubKey]> }
-
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -253,7 +253,6 @@ export type Base64FileInput = {
 
 export type BulkPrice = {
   __typename?: 'BulkPrice'
-
   /** @deprecated Bulk price value deprecated in favor of 'net' and 'gross' fields */
   price: Scalars['Float']
   gross: Scalars['Float']
@@ -733,26 +732,24 @@ export type Cluster = ICluster &
     attributeValues: AttributeValueResponse
     category: Category
     categoryPath: Array<Category>
-
     /** @deprecated Deprecated in favor of productId and clusterId */
     classId: Scalars['Int']
     crossupsells: Array<Crossupsell>
-    language?: Maybe<Scalars['String']>
-    class: Scalars['String']
-    isHidden: YesNo
+    products?: Maybe<Array<Product>>
+    options?: Maybe<Array<ClusterOption>>
+    drillDown?: Maybe<Array<ClusterDrillDown>>
+    defaultProduct?: Maybe<Product>
     name: Array<LocalizedString>
     description: Array<LocalizedString>
     shortDescription: Array<LocalizedString>
     slug: Array<LocalizedString>
     sku: Scalars['String']
-
     /** @deprecated Path is no longer supported */
     path?: Maybe<Scalars['String']>
     defaultLanguage: Scalars['String']
-    products?: Maybe<Array<Product>>
-    options?: Maybe<Array<ClusterOption>>
-    drillDown?: Maybe<Array<ClusterDrillDown>>
-    defaultProduct?: Maybe<Product>
+    language?: Maybe<Scalars['String']>
+    class: Scalars['String']
+    isHidden: YesNo
   }
 
 export type ClusterAttributeValuesArgs = {
@@ -843,10 +840,12 @@ export type Company = {
   slug?: Maybe<Scalars['String']>
   tag?: Maybe<Scalars['String']>
   dateCreated?: Maybe<Scalars['DateTime']>
+  lastModifiedDate?: Maybe<Scalars['DateTime']>
   parentUsergroupId: Scalars['Int']
   usergroup?: Maybe<Usergroup>
   contacts?: Maybe<ContactsResponse>
   managers?: Maybe<Array<IBaseUser>>
+  usergroupPath: Array<Usergroup>
 }
 
 export type CompanyAddressesArgs = {
@@ -913,13 +912,15 @@ export type CompanySearchArguments = {
   usergroupId?: Maybe<Scalars['Int']>
   name?: Maybe<Scalars['String']>
   managedCompaniesOnly?: Maybe<Scalars['Boolean']>
-  page?: Maybe<Scalars['Int']>
-  offset?: Maybe<Scalars['Int']>
+  page?: Scalars['Int']
+  offset?: Scalars['Int']
   sort?: Maybe<Array<CompanySortInput>>
+  lastModifiedDate?: Maybe<DateSearchInput>
 }
 
 export enum CompanySortableFields {
-  Name = 'name'
+  Name = 'name',
+  LastModifiedDate = 'lastModifiedDate'
 }
 
 export type CompanySortInput = {
@@ -931,7 +932,6 @@ export type Contact = IBaseUser & {
   __typename?: 'Contact'
   id: Scalars['Int']
   contactId: Scalars['Int']
-
   /**
    * @deprecated Deprecated is favour of attributeValues.
    *       Added pagination to ther query the default offset will be 12 values.
@@ -958,6 +958,8 @@ export type Contact = IBaseUser & {
   dateOfBirth?: Maybe<Scalars['DateTime']>
   mailingList?: Maybe<YesNo>
   isLoggedIn?: Maybe<Scalars['Boolean']>
+  dateCreated?: Maybe<Scalars['DateTime']>
+  lastModifiedDate?: Maybe<Scalars['DateTime']>
   parentCompanyId: Scalars['Int']
   company?: Maybe<Company>
   managedCompanies?: Maybe<Array<Company>>
@@ -978,14 +980,16 @@ export type ContactSearchArguments = {
   email?: Maybe<Scalars['String']>
   gender?: Maybe<Gender>
   attribute?: Maybe<UserManagementAttributeSearchInput>
-  page?: Maybe<Scalars['Int']>
-  offset?: Maybe<Scalars['Int']>
+  page?: Scalars['Int']
+  offset?: Scalars['Int']
   sort?: Maybe<Array<ContactSortInput>>
+  lastModifiedDate?: Maybe<DateSearchInput>
 }
 
 export enum ContactSortableFields {
   FirstName = 'firstName',
-  LastName = 'lastName'
+  LastName = 'lastName',
+  LastModifiedDate = 'lastModifiedDate'
 }
 
 export type ContactSortInput = {
@@ -1010,6 +1014,14 @@ export type CreateAuthenticationInput = {
   phoneNumber?: Maybe<Scalars['String']>
   displayName?: Maybe<Scalars['String']>
   uid?: Maybe<Scalars['String']>
+}
+
+export type CreateCategoryInput = {
+  name: Array<LocalizedStringInput>
+  description: Array<LocalizedStringInput>
+  shortDescription: Array<LocalizedStringInput>
+  parent?: Maybe<Scalars['Int']>
+  defaultLanguage: Scalars['String']
 }
 
 export type CreateCompanyInput = {
@@ -1062,6 +1074,31 @@ export type CreatePaymentInput = {
   method: Scalars['String']
   status: PaymentStatuses
   addTransaction?: Maybe<CreateTransactionInput>
+}
+
+export type CreateProductInput = {
+  language: Scalars['String']
+  categoryId?: Maybe<Scalars['Int']>
+  name?: Maybe<Array<LocalizedStringInput>>
+  description?: Maybe<Array<LocalizedStringInput>>
+  shortDescription?: Maybe<Array<LocalizedStringInput>>
+  sku?: Maybe<Scalars['String']>
+  status?: Maybe<ProductStatus>
+  supplier?: Maybe<Scalars['String']>
+  supplierCode?: Maybe<Scalars['String']>
+  manufacturerCode?: Maybe<Scalars['String']>
+  eanCode?: Maybe<Scalars['String']>
+  taxCode?: Maybe<TaxCode>
+  originalPrice?: Maybe<Scalars['Float']>
+  unit?: Maybe<Scalars['Int']>
+  minimumQuantity?: Maybe<Scalars['Int']>
+  manufacturer?: Maybe<Scalars['String']>
+  costPrice?: Maybe<Scalars['Float']>
+  suggestedPrice?: Maybe<Scalars['Float']>
+  package?: Maybe<Scalars['String']>
+  shortName?: Maybe<Scalars['String']>
+  packageDescription?: Maybe<Array<LocalizedStringInput>>
+  notes?: Maybe<Array<LocalizedStringInput>>
 }
 
 export type CreateSparePartInput = {
@@ -1172,7 +1209,6 @@ export type Crossupsell = {
   clusterId?: Maybe<Scalars['Int']>
   type: CrossupsellTypes
   subtype: Scalars['String']
-
   /** @deprecated Deprecated in favor of item */
   product?: Maybe<Product>
   item?: Maybe<IBaseProduct>
@@ -1203,7 +1239,6 @@ export type Customer = IBaseUser & {
   id: Scalars['Int']
   customerId: Scalars['Int']
   addresses: Array<Address>
-
   /**
    * @deprecated Deprecated is favour of attributeValues.
    *       Added pagination to ther query the default offset will be 12 values.
@@ -1230,8 +1265,11 @@ export type Customer = IBaseUser & {
   dateOfBirth?: Maybe<Scalars['DateTime']>
   mailingList?: Maybe<YesNo>
   isLoggedIn?: Maybe<Scalars['Boolean']>
+  dateCreated?: Maybe<Scalars['DateTime']>
+  lastModifiedDate?: Maybe<Scalars['DateTime']>
   parentUsergroupId: Scalars['Int']
   usergroup?: Maybe<Usergroup>
+  usergroupPath: Array<Usergroup>
 }
 
 export type CustomerAddressesArgs = {
@@ -1308,10 +1346,12 @@ export type CustomerSearchArguments = {
   page?: Maybe<Scalars['Int']>
   offset?: Maybe<Scalars['Int']>
   sort?: Maybe<Array<CustomerSortInput>>
+  lastModifiedDate?: Maybe<DateSearchInput>
 }
 
 export enum CustomerSortableFields {
-  Name = 'name'
+  Name = 'name',
+  LastModifiedDate = 'lastModifiedDate'
 }
 
 export type CustomerSortInput = {
@@ -1328,6 +1368,11 @@ export type CustomersResponse = {
   pages: Scalars['Int']
   start: Scalars['Int']
   end: Scalars['Int']
+}
+
+export type DateSearchInput = {
+  greaterThan?: Maybe<Scalars['DateTime']>
+  lessThan?: Maybe<Scalars['DateTime']>
 }
 
 export type DeleteMediaDocumentResponse = {
@@ -1491,6 +1536,128 @@ export type ExternalReferenceInput = {
   sourceId: Scalars['String']
 }
 
+export type FavoriteList = {
+  __typename?: 'FavoriteList'
+  id: Scalars['ID']
+  name: Scalars['String']
+  companyId?: Maybe<Scalars['Int']>
+  contactId?: Maybe<Scalars['Int']>
+  customerId?: Maybe<Scalars['Int']>
+  isDefault: Scalars['Boolean']
+  slug: Scalars['String']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  products?: Maybe<ProductsResponse>
+  clusters?: Maybe<ProductsResponse>
+}
+
+export type FavoriteListProductsArgs = {
+  term?: Maybe<Scalars['String']>
+  manufacturer?: Maybe<Array<Scalars['String']>>
+  supplierCode?: Maybe<Array<Scalars['String']>>
+  supplier?: Maybe<Array<Scalars['String']>>
+  manufacturerCode?: Maybe<Array<Scalars['String']>>
+  EANCode?: Maybe<Array<Scalars['String']>>
+  id?: Maybe<Array<Scalars['Int']>>
+  classId?: Maybe<Array<Scalars['Int']>>
+  class?: Maybe<ProductClass>
+  tag?: Maybe<Array<Scalars['String']>>
+  language?: Scalars['String']
+  page?: Scalars['Int']
+  offset?: Scalars['Int']
+  textFilters?: Maybe<Array<TextFilterInput>>
+  rangeFilters?: Maybe<Array<RangeFilterInput>>
+  price?: Maybe<PriceFilterInput>
+  status?: Maybe<Array<ProductStatus>>
+  hidden?: Maybe<Scalars['Boolean']>
+  sort?: Maybe<Array<SortInput>>
+  searchFields?: Maybe<Array<SearchFieldsInput>>
+  hasBundle?: Maybe<YesNo>
+  isBundleLeader?: Maybe<YesNo>
+  parentSlug?: Maybe<Scalars['String']>
+  pathSlug?: Maybe<Scalars['String']>
+  userId?: Maybe<Scalars['Int']>
+  path?: Maybe<Scalars['String']>
+  categoryId?: Maybe<Scalars['Int']>
+  sku?: Maybe<Array<Scalars['String']>>
+  getDescendants?: Maybe<Scalars['Boolean']>
+}
+
+export type FavoriteListClustersArgs = {
+  term?: Maybe<Scalars['String']>
+  manufacturer?: Maybe<Array<Scalars['String']>>
+  supplierCode?: Maybe<Array<Scalars['String']>>
+  supplier?: Maybe<Array<Scalars['String']>>
+  manufacturerCode?: Maybe<Array<Scalars['String']>>
+  EANCode?: Maybe<Array<Scalars['String']>>
+  id?: Maybe<Array<Scalars['Int']>>
+  classId?: Maybe<Array<Scalars['Int']>>
+  class?: Maybe<ProductClass>
+  tag?: Maybe<Array<Scalars['String']>>
+  language?: Scalars['String']
+  page?: Scalars['Int']
+  offset?: Scalars['Int']
+  textFilters?: Maybe<Array<TextFilterInput>>
+  rangeFilters?: Maybe<Array<RangeFilterInput>>
+  price?: Maybe<PriceFilterInput>
+  status?: Maybe<Array<ProductStatus>>
+  hidden?: Maybe<Scalars['Boolean']>
+  sort?: Maybe<Array<SortInput>>
+  searchFields?: Maybe<Array<SearchFieldsInput>>
+  hasBundle?: Maybe<YesNo>
+  isBundleLeader?: Maybe<YesNo>
+  parentSlug?: Maybe<Scalars['String']>
+  pathSlug?: Maybe<Scalars['String']>
+  userId?: Maybe<Scalars['Int']>
+  path?: Maybe<Scalars['String']>
+  categoryId?: Maybe<Scalars['Int']>
+  sku?: Maybe<Array<Scalars['String']>>
+  getDescendants?: Maybe<Scalars['Boolean']>
+}
+
+export type FavoriteListsCreateInput = {
+  productIds?: Maybe<Array<Scalars['Int']>>
+  clusterIds?: Maybe<Array<Scalars['Int']>>
+  isDefault?: Maybe<Scalars['Boolean']>
+  name: Scalars['String']
+  companyId?: Maybe<Scalars['Int']>
+  contactId?: Maybe<Scalars['Int']>
+  customerId?: Maybe<Scalars['Int']>
+}
+
+export type FavoriteListsItemsInput = {
+  productIds?: Maybe<Array<Scalars['Int']>>
+  clusterIds?: Maybe<Array<Scalars['Int']>>
+}
+
+export type FavoriteListsResponse = {
+  __typename?: 'FavoriteListsResponse'
+  items: Array<FavoriteList>
+  itemsFound: Scalars['Int']
+  offset: Scalars['Int']
+  page: Scalars['Int']
+  pages: Scalars['Int']
+  start: Scalars['Int']
+  end: Scalars['Int']
+}
+
+export type FavoriteListsSearchInput = {
+  name?: Maybe<Scalars['String']>
+  isDefault?: Maybe<Scalars['Boolean']>
+  page?: Scalars['Int']
+  offset?: Scalars['Int']
+  companyId?: Maybe<Scalars['Int']>
+  contactId?: Maybe<Scalars['Int']>
+  customerId?: Maybe<Scalars['Int']>
+}
+
+export type FavoriteListsUpdateInput = {
+  productIds?: Maybe<Array<Scalars['Int']>>
+  clusterIds?: Maybe<Array<Scalars['Int']>>
+  isDefault?: Maybe<Scalars['Boolean']>
+  name?: Maybe<Scalars['String']>
+}
+
 export enum FeaturesEnableDisable {
   Upscale = 'UPSCALE'
 }
@@ -1572,7 +1739,7 @@ export type GcipUser = {
   createdAt?: Maybe<Scalars['DateTime']>
   accessToken: Scalars['String']
   refreshToken: Scalars['String']
-  expirationTime: Scalars['DateTime']
+  expirationTime?: Maybe<Scalars['DateTime']>
 }
 
 export enum Gender {
@@ -1616,7 +1783,6 @@ export type IBaseProduct = {
   id: Scalars['Int']
   language?: Maybe<Scalars['String']>
   class: Scalars['String']
-
   /** @deprecated Deprecated in favor of productId and clusterId */
   classId: Scalars['Int']
   isHidden: YesNo
@@ -1626,7 +1792,6 @@ export type IBaseProduct = {
   slug: Array<LocalizedString>
   sku: Scalars['String']
   categoryId: Scalars['Int']
-
   /** @deprecated Path is no longer supported */
   path?: Maybe<Scalars['String']>
   defaultLanguage: Scalars['String']
@@ -1649,6 +1814,7 @@ export type IBaseProductSlugArgs = {
 }
 
 export type IBaseUser = {
+  /** @deprecated This property is no longer relevant or necessary, use userId instead. */
   id: Scalars['Int']
   debtorId?: Maybe<Scalars['String']>
   gender?: Maybe<Gender>
@@ -1668,6 +1834,8 @@ export type IBaseUser = {
   dateOfBirth?: Maybe<Scalars['DateTime']>
   mailingList?: Maybe<YesNo>
   isLoggedIn?: Maybe<Scalars['Boolean']>
+  dateCreated?: Maybe<Scalars['DateTime']>
+  lastModifiedDate?: Maybe<Scalars['DateTime']>
 }
 
 export type IBundle = {
@@ -1750,7 +1918,6 @@ export type ICluster = {
   id: Scalars['Int']
   language?: Maybe<Scalars['String']>
   class: Scalars['String']
-
   /** @deprecated Deprecated in favor of productId and clusterId */
   classId: Scalars['Int']
   isHidden: YesNo
@@ -1760,7 +1927,6 @@ export type ICluster = {
   slug: Array<LocalizedString>
   sku: Scalars['String']
   categoryId: Scalars['Int']
-
   /** @deprecated Path is no longer supported */
   path?: Maybe<Scalars['String']>
   defaultLanguage: Scalars['String']
@@ -1862,7 +2028,6 @@ export type IProduct = {
   id: Scalars['Int']
   language?: Maybe<Scalars['String']>
   class: Scalars['String']
-
   /** @deprecated Deprecated in favor of productId and clusterId */
   classId: Scalars['Int']
   isHidden: YesNo
@@ -1872,7 +2037,6 @@ export type IProduct = {
   slug: Array<LocalizedString>
   sku: Scalars['String']
   categoryId: Scalars['Int']
-
   /** @deprecated Path is no longer supported */
   path?: Maybe<Scalars['String']>
   defaultLanguage: Scalars['String']
@@ -1893,6 +2057,7 @@ export type IProduct = {
   package: Scalars['String']
   packageUnit: Scalars['String']
   packageUnitQuantity: Scalars['String']
+  priceDisplay: Scalars['String']
   originalPrice: Scalars['Float']
   costPrice: Scalars['Float']
   suggestedPrice: Scalars['Float']
@@ -1940,7 +2105,6 @@ export type IResource = {
   id: Scalars['Int']
   language?: Maybe<Scalars['String']>
   class: Scalars['String']
-
   /** @deprecated Deprecated in favor of productId and clusterId */
   classId: Scalars['Int']
   isHidden: YesNo
@@ -2034,7 +2198,7 @@ export type LocalizedStringArrayInput = {
 
 export type LocalizedStringInput = {
   language: Scalars['String']
-  value?: Maybe<Scalars['String']>
+  value: Scalars['String']
 }
 
 export type LocalizedVideo = {
@@ -2059,7 +2223,7 @@ export type LoginInput = {
 
 export type Logout = {
   __typename?: 'Logout'
-  todo: Scalars['String']
+  todo?: Maybe<Scalars['String']>
 }
 
 export type Media = {
@@ -2315,7 +2479,8 @@ export type Mutation = {
   externalAddressDelete: Scalars['Boolean']
   startSession: Login
   login: Login
-  logout: Logout
+  /** @deprecated signOut mutation will be available in the future */
+  logout?: Maybe<Logout>
   authenticationCreate: Login
   authenticationDelete: Scalars['Boolean']
   claimsReset: Scalars['Boolean']
@@ -2337,12 +2502,21 @@ export type Mutation = {
   cartRemoveVoucherCode: CartResponse
   cartProcess: CartProcessResponse
   cartDelete: CartDeleteResponse
+  categoryCreate: Category
+  categoryUpdate: Category
+  categoryDelete: Scalars['Boolean']
   channelInvalidateCache: Scalars['Boolean']
   paymentCreate: Payment
   paymentUpdate: Payment
   paymentDelete: Payment
   publishEmailEvent: PublishEmailEventResponse
   publishEmailSendEvent: PublishEmailEventResponse
+  favoriteListCreate: FavoriteList
+  favoriteListUpdate: FavoriteList
+  favoriteListDelete: Scalars['Boolean']
+  favoriteListAddItems: FavoriteList
+  favoriteListRemoveItems: FavoriteList
+  favoriteListClearItems: FavoriteList
   inventoryUpdate: InventoryResponse
   inventoryDelete: InventoryDeleteResponse
   mediaImageCreate: MediaImage
@@ -2358,6 +2532,9 @@ export type Mutation = {
   orderSetStatus: Order
   permissionsInvalidateCache: Scalars['Boolean']
   discountInvalidateCache: Scalars['Boolean']
+  productCreate: Product
+  productUpdate: Product
+  productDelete: Scalars['Boolean']
   shopInvalidateCache: Scalars['Boolean']
   machineCreate: SparePartsMachine
   machineDelete: Scalars['Boolean']
@@ -2552,6 +2729,19 @@ export type MutationCartDeleteArgs = {
   cartId: Scalars['String']
 }
 
+export type MutationCategoryCreateArgs = {
+  input: CreateCategoryInput
+}
+
+export type MutationCategoryUpdateArgs = {
+  categoryId: Scalars['Float']
+  input: UpdateCategoryInput
+}
+
+export type MutationCategoryDeleteArgs = {
+  categoryId: Scalars['Float']
+}
+
 export type MutationPaymentCreateArgs = {
   input: CreatePaymentInput
 }
@@ -2571,6 +2761,35 @@ export type MutationPublishEmailEventArgs = {
 
 export type MutationPublishEmailSendEventArgs = {
   input: EmailSendEventInput
+}
+
+export type MutationFavoriteListCreateArgs = {
+  input: FavoriteListsCreateInput
+}
+
+export type MutationFavoriteListUpdateArgs = {
+  id: Scalars['String']
+  input: FavoriteListsUpdateInput
+}
+
+export type MutationFavoriteListDeleteArgs = {
+  id: Scalars['String']
+}
+
+export type MutationFavoriteListAddItemsArgs = {
+  id: Scalars['String']
+  input: FavoriteListsItemsInput
+}
+
+export type MutationFavoriteListRemoveItemsArgs = {
+  id: Scalars['String']
+  input: FavoriteListsItemsInput
+}
+
+export type MutationFavoriteListClearItemsArgs = {
+  id: Scalars['String']
+  products?: Maybe<Scalars['Boolean']>
+  clusters?: Maybe<Scalars['Boolean']>
 }
 
 export type MutationInventoryUpdateArgs = {
@@ -2633,6 +2852,18 @@ export type MutationPermissionsInvalidateCacheArgs = {
 
 export type MutationDiscountInvalidateCacheArgs = {
   userIds: Array<Scalars['Int']>
+}
+
+export type MutationProductCreateArgs = {
+  input: CreateProductInput
+}
+
+export type MutationProductUpdateArgs = {
+  input: UpdateProductInput
+}
+
+export type MutationProductDeleteArgs = {
+  productId: Scalars['Int']
 }
 
 export type MutationMachineCreateArgs = {
@@ -2811,11 +3042,9 @@ export type Order = {
   addresses: Array<Address>
   userId: Scalars['Int']
   accountManagerId: Scalars['Int']
-
   /** @deprecated Deprecated in favour of postageData.pickUpLocationId */
   pickupStoreId?: Maybe<Scalars['Int']>
   cartId?: Maybe<Scalars['String']>
-
   /** @deprecated Deprecated in favour of channelId */
   siteId?: Maybe<Scalars['Int']>
   channelId?: Maybe<Scalars['Int']>
@@ -2935,7 +3164,6 @@ export type OrderTotals = {
   net: Scalars['Float']
   tax: Scalars['Float']
   discountType: OrderDiscountType
-
   /** @deprecated discountPercentage will be removed. Use discountValue i.c.w. discountType instead. This field will remain null */
   discountPercentage?: Maybe<Scalars['Float']>
   discountValue: Scalars['Float']
@@ -3045,6 +3273,11 @@ export type PaymentsResponse = {
   end: Scalars['Int']
 }
 
+export type PaymentsSearchInput = {
+  page?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+}
+
 export enum PaymentStatuses {
   Open = 'OPEN',
   Pending = 'PENDING',
@@ -3084,11 +3317,9 @@ export type Product = IResource &
   IProduct & {
     __typename?: 'Product'
     id: Scalars['Int']
-
     /** @deprecated Deprecated in favor of productId and clusterId */
     classId: Scalars['Int']
     categoryId: Scalars['Int']
-
     /**
      * @deprecated Deprecated is favour of attributeValues.
      *       Added pagination to ther query the default offset will be 12 values.
@@ -3103,13 +3334,10 @@ export type Product = IResource &
     categoryPath: Array<Category>
     crossupsells: Array<Crossupsell>
     inventory?: Maybe<ProductInventory>
-
     /** @deprecated Deprecated in favor of `media.images` */
     mediaImages?: Maybe<PaginatedMediaImageResponse>
-
     /** @deprecated Deprecated in favor of `media.videos` */
     mediaVideos?: Maybe<PaginatedMediaVideoResponse>
-
     /** @deprecated Deprecated in favor of `media.documents` */
     mediaDocuments?: Maybe<PaginatedMediaDocumentResponse>
     media?: Maybe<ProductMedia>
@@ -3124,7 +3352,6 @@ export type Product = IResource &
     shortDescription: Array<LocalizedString>
     slug: Array<LocalizedString>
     sku: Scalars['String']
-
     /** @deprecated Path is no longer supported */
     path?: Maybe<Scalars['String']>
     defaultLanguage: Scalars['String']
@@ -3144,6 +3371,7 @@ export type Product = IResource &
     package: Scalars['String']
     packageUnit: Scalars['String']
     packageUnitQuantity: Scalars['String']
+    priceDisplay: Scalars['String']
     originalPrice: Scalars['Float']
     costPrice: Scalars['Float']
     suggestedPrice: Scalars['Float']
@@ -3178,6 +3406,10 @@ export type ProductBundlesArgs = {
 
 export type ProductCrossupsellsArgs = {
   input?: Maybe<CrossupsellTypesInput>
+}
+
+export type ProductMediaImagesArgs = {
+  search?: Maybe<MediaImageProductSearchInput>
 }
 
 export type ProductMediaVideosArgs = {
@@ -3257,6 +3489,14 @@ export type ProductMediaImagesArgs = {
   search?: Maybe<MediaImageProductSearchInput>
 }
 
+export type ProductMediaVideosArgs = {
+  search?: Maybe<MediaVideoProductSearchInput>
+}
+
+export type ProductMediaDocumentsArgs = {
+  search?: Maybe<MediaDocumentProductSearchInput>
+}
+
 export type ProductOffer = IProductOffer & {
   __typename?: 'ProductOffer'
   id: Scalars['String']
@@ -3268,7 +3508,6 @@ export type ProductOffer = IProductOffer & {
 
 export type ProductPrice = {
   __typename?: 'ProductPrice'
-
   /** @deprecated Product price value deprecated in favor of 'net' and 'gross' fields */
   value: Scalars['Float']
   gross: Scalars['Float']
@@ -3304,7 +3543,6 @@ export type ProductsResponse = {
   end: Scalars['Int']
   minPrice: Scalars['Int']
   maxPrice: Scalars['Int']
-
   /** @deprecated Deprecated in favor of filters */
   availableAttributes?: Maybe<Array<AttributeFilter>>
   filters?: Maybe<Array<AttributeFilter>>
@@ -3340,10 +3578,8 @@ export type Query = {
   userAttributeValues: AttributeValueResponse
   contactAttributeValues: AttributeValueResponse
   customerAttributeValues: AttributeValueResponse
-
   /** @deprecated Deprecated in favor of productAttributeValues */
   productAttributes: Array<Attribute>
-
   /** @deprecated Deprecated in favor of userAttributeValues */
   userAttributes: Array<Attribute>
   attributeClassIdsByNameAndValue: Array<Scalars['Int']>
@@ -3353,7 +3589,6 @@ export type Query = {
   bundle: Bundle
   cart: ICart
   category: Category
-
   /** @deprecated Deprecated in favor of channel */
   site: Site
   channel: Channel
@@ -3361,30 +3596,25 @@ export type Query = {
   payment?: Maybe<Payment>
   payments: PaymentsResponse
   crossupsells: Array<Crossupsell>
+  favoriteLists: FavoriteListsResponse
+  favoriteList: FavoriteList
   inventory: InventoryResponse
-
   /** @deprecated Deprecated in favor of `media.image` */
   mediaImage: MediaImage
-
   /** @deprecated Deprecated in favor of `media.images` */
   mediaImages: PaginatedMediaImageResponse
-
   /** @deprecated Deprecated in favor of `media.video` */
   mediaVideo: MediaVideo
-
   /** @deprecated Deprecated in favor of `media.videos` */
   mediaVideos: PaginatedMediaVideoResponse
-
   /** @deprecated Deprecated in favor of `media.document` */
   mediaDocument: MediaDocument
-
   /** @deprecated Deprecated in favor of `media.documents` */
   mediaDocuments: PaginatedMediaDocumentResponse
   media?: Maybe<Media>
   orders: OrderResponse
   order: Order
   orderGetPDF: Base64File
-
   /** @deprecated Deprecated, use mutation instead */
   orderSendConfirmationEmail: SendOrderConfirmResponseType
   userAclList: Array<Scalars['Int']>
@@ -3515,8 +3745,20 @@ export type QueryPaymentArgs = {
   searchBy: SearchByInput
 }
 
+export type QueryPaymentsArgs = {
+  input?: Maybe<PaymentsSearchInput>
+}
+
 export type QueryCrossupsellsArgs = {
   input: CrossupsellInput
+}
+
+export type QueryFavoriteListsArgs = {
+  input?: Maybe<FavoriteListsSearchInput>
+}
+
+export type QueryFavoriteListArgs = {
+  id: Scalars['String']
 }
 
 export type QueryInventoryArgs = {
@@ -4069,7 +4311,6 @@ export type SparePartsResponse = {
   end: Scalars['Int']
   minPrice: Scalars['Int']
   maxPrice: Scalars['Int']
-
   /** @deprecated Deprecated in favor of filters */
   availableAttributes?: Maybe<Array<AttributeFilter>>
   filters?: Maybe<Array<AttributeFilter>>
@@ -4114,9 +4355,10 @@ export type TaxesResponse = {
 }
 
 export type TaxSearchInput = {
-  type?: Maybe<Scalars['String']>
   page?: Scalars['Int']
   offset?: Scalars['Int']
+  zone?: Maybe<Scalars['String']>
+  shopId?: Maybe<Scalars['Int']>
 }
 
 export type Tender = {
@@ -4124,7 +4366,6 @@ export type Tender = {
   tenderId: Scalars['String']
   orderId?: Maybe<Scalars['Int']>
   type: TenderOrderType
-
   /** @deprecated Deprecated in favor of channelId */
   siteId?: Maybe<Scalars['Int']>
   channelId?: Maybe<Scalars['Int']>
@@ -4570,6 +4811,14 @@ export type TrimInput = {
   left?: Maybe<Scalars['Int']>
 }
 
+export type UpdateCategoryInput = {
+  name?: Maybe<Array<LocalizedStringInput>>
+  description?: Maybe<Array<LocalizedStringInput>>
+  shortDescription?: Maybe<Array<LocalizedStringInput>>
+  parent?: Maybe<Scalars['Int']>
+  defaultLanguage?: Maybe<Scalars['String']>
+}
+
 export type UpdateContactInput = {
   contactId: Scalars['Int']
   firstName?: Maybe<Scalars['String']>
@@ -4673,6 +4922,31 @@ export type UpdatePaymentInput = {
   addTransaction?: Maybe<CreateTransactionInput>
 }
 
+export type UpdateProductInput = {
+  categoryId?: Maybe<Scalars['Int']>
+  name?: Maybe<Array<LocalizedStringInput>>
+  description?: Maybe<Array<LocalizedStringInput>>
+  shortDescription?: Maybe<Array<LocalizedStringInput>>
+  sku?: Maybe<Scalars['String']>
+  status?: Maybe<ProductStatus>
+  supplier?: Maybe<Scalars['String']>
+  supplierCode?: Maybe<Scalars['String']>
+  manufacturerCode?: Maybe<Scalars['String']>
+  eanCode?: Maybe<Scalars['String']>
+  taxCode?: Maybe<TaxCode>
+  originalPrice?: Maybe<Scalars['Float']>
+  unit?: Maybe<Scalars['Int']>
+  minimumQuantity?: Maybe<Scalars['Int']>
+  manufacturer?: Maybe<Scalars['String']>
+  costPrice?: Maybe<Scalars['Float']>
+  suggestedPrice?: Maybe<Scalars['Float']>
+  package?: Maybe<Scalars['String']>
+  shortName?: Maybe<Scalars['String']>
+  packageDescription?: Maybe<Array<LocalizedStringInput>>
+  notes?: Maybe<Array<LocalizedStringInput>>
+  productId: Scalars['Int']
+}
+
 export type UpdateTaxInput = {
   shopId?: Maybe<Scalars['Int']>
   code?: Maybe<Scalars['String']>
@@ -4759,10 +5033,10 @@ export type UrlFileUploadInput = {
 
 export type User = IBaseUser & {
   __typename?: 'User'
+  /** @deprecated This property is no longer relevant or necessary, use userId instead. */
   id: Scalars['Int']
   userId: Scalars['Int']
   addresses: Array<Address>
-
   /**
    * @deprecated Deprecated is favour of attributeValues.
    *       Added pagination to ther query the default offset will be 12 values.
@@ -4792,12 +5066,15 @@ export type User = IBaseUser & {
   dateOfBirth?: Maybe<Scalars['DateTime']>
   mailingList?: Maybe<YesNo>
   isLoggedIn?: Maybe<Scalars['Boolean']>
+  dateCreated?: Maybe<Scalars['DateTime']>
+  lastModifiedDate?: Maybe<Scalars['DateTime']>
   taxNumber?: Maybe<Scalars['String']>
   loginRoot?: Maybe<Scalars['Int']>
   company?: Maybe<Scalars['String']>
   parentUsergroupId: Scalars['Int']
   managedCompanies?: Maybe<Array<Company>>
   usergroup?: Maybe<Usergroup>
+  usergroupPath: Array<Usergroup>
 }
 
 export type UserAddressesArgs = {
@@ -4894,6 +5171,7 @@ export type Usergroup = {
   slug?: Maybe<Scalars['String']>
   tag?: Maybe<Scalars['String']>
   dateCreated?: Maybe<Scalars['DateTime']>
+  lastModifiedDate?: Maybe<Scalars['DateTime']>
   parentUsergroupId: Scalars['Int']
   usergroup: Usergroup
   usergroups: Array<Usergroup>
@@ -5037,3 +5315,4 @@ export enum YesNo {
   Y = 'Y',
   N = 'N'
 }
+
