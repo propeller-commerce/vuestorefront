@@ -6,8 +6,8 @@ export default gql`
   ${AttributeValueFragment}
   ${InventoryFragment}
   ${ProductPriceFragment}
-  query bundle($bundleId: Float!, $language: String, $attributesPage: Int, $attributesOffset: Int) {
-    bundle(bundleId: $bundleId) {
+  query bundle($bundleId: Int!, $language: String, $attributesPage: Int, $attributesOffset: Int) {
+    bundle(input: { id: $bundleId }) {
       id
       comboId
       name
@@ -70,7 +70,7 @@ export default gql`
             ...Inventory
           }
           media {
-            images(search: { sort: ASC }){
+            images(search: { sort: ASC }) {
               ...MediaImages
             }
           }
