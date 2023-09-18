@@ -269,29 +269,50 @@ export type BulkPriceNetArgs = {
 export type Bundle = IBundle & {
   __typename?: 'Bundle'
   id: Scalars['Float']
-  comboId: Scalars['Float']
+
+  /** @deprecated The comboId is deprecated and will be removed in the future. Please use the id field instead. */
+  comboId?: Maybe<Scalars['Float']>
   name: Scalars['String']
-  description: Scalars['String']
+  description?: Maybe<Scalars['String']>
   discount?: Maybe<Scalars['Float']>
-  condition?: Maybe<Scalars['String']>
+  condition?: Maybe<BundleCondition>
   price?: Maybe<BundlePrice>
   items?: Maybe<Array<BundleItem>>
+}
+
+export type BundleAddItemsInput = {
+  items?: Maybe<Array<BundleItemInput>>
+}
+
+export enum BundleCondition {
+  All = 'ALL',
+  Ep = 'EP',
 }
 
 export type BundleItem = IBundleItem & {
   __typename?: 'BundleItem'
   productId: Scalars['Int']
   price?: Maybe<BundlePrice>
-  isLeader: Scalars['String']
+  isLeader: YesNo
   product: Product
+}
+
+export type BundleItemInput = {
+  productId: Scalars['Int']
+  isLeader?: Maybe<YesNo>
 }
 
 export type BundlePrice = IBundlePrice & {
   __typename?: 'BundlePrice'
-  net: Scalars['Float']
-  gross: Scalars['Float']
-  originalNet: Scalars['Float']
-  originalGross: Scalars['Float']
+  net?: Maybe<Scalars['Float']>
+  gross?: Maybe<Scalars['Float']>
+  originalNet?: Maybe<Scalars['Float']>
+  originalGross?: Maybe<Scalars['Float']>
+}
+
+export type BundleSearchInput = {
+  id: Scalars['Int']
+  taxZone?: Maybe<Scalars['String']>
 }
 
 export type BusinessHours = {
@@ -487,7 +508,7 @@ export type CartMainItem = ICartBaseItem & {
 }
 
 export type CartMainItemBundleArgs = {
-  taxZone?: Scalars['String']
+  taxZone?: Maybe<Scalars['String']>
 }
 
 export type CartPaymentData = {
@@ -1010,6 +1031,23 @@ export type CreateAuthenticationInput = {
   phoneNumber?: Maybe<Scalars['String']>
   displayName?: Maybe<Scalars['String']>
   uid?: Maybe<Scalars['String']>
+}
+
+export type CreateBundleInput = {
+  name: Scalars['String']
+  description: Scalars['String']
+  discount?: Maybe<Scalars['Float']>
+  condition?: Maybe<BundleCondition>
+  price?: Maybe<Scalars['Float']>
+  addBundleItems?: Maybe<Array<BundleItemInput>>
+}
+
+export type CreateCategoryInput = {
+  name: Array<LocalizedStringInput>
+  description: Array<LocalizedStringInput>
+  shortDescription: Array<LocalizedStringInput>
+  parent?: Maybe<Scalars['Int']>
+  defaultLanguage: Scalars['String']
 }
 
 export type CreateCompanyInput = {
@@ -1672,11 +1710,13 @@ export type IBaseUser = {
 
 export type IBundle = {
   id: Scalars['Float']
-  comboId: Scalars['Float']
+
+  /** @deprecated The comboId is deprecated and will be removed in the future. Please use the id field instead. */
+  comboId?: Maybe<Scalars['Float']>
   name: Scalars['String']
-  description: Scalars['String']
+  description?: Maybe<Scalars['String']>
   discount?: Maybe<Scalars['Float']>
-  condition?: Maybe<Scalars['String']>
+  condition?: Maybe<BundleCondition>
   price?: Maybe<BundlePrice>
   items?: Maybe<Array<BundleItem>>
 }
@@ -1684,14 +1724,14 @@ export type IBundle = {
 export type IBundleItem = {
   productId: Scalars['Int']
   price?: Maybe<BundlePrice>
-  isLeader: Scalars['String']
+  isLeader: YesNo
 }
 
 export type IBundlePrice = {
-  net: Scalars['Float']
-  gross: Scalars['Float']
-  originalNet: Scalars['Float']
-  originalGross: Scalars['Float']
+  net?: Maybe<Scalars['Float']>
+  gross?: Maybe<Scalars['Float']>
+  originalNet?: Maybe<Scalars['Float']>
+  originalGross?: Maybe<Scalars['Float']>
 }
 
 export type ICart = {
@@ -2322,6 +2362,11 @@ export type Mutation = {
   verifyToken: VerifyToken
   exchangeRefreshToken: RefreshTokenResponse
   passwordResetLink: Scalars['String']
+  bundleCreate: Bundle
+  bundleUpdate: Bundle
+  bundleDelete: Scalars['Boolean']
+  bundleAddItems: Array<BundleItem>
+  bundleRemoveItem: Scalars['Boolean']
   cartStart: Cart
   cartAddItem: CartResponse
   cartAddBundle: CartResponse
@@ -2483,6 +2528,29 @@ export type MutationPasswordResetLinkArgs = {
   email?: Maybe<Scalars['String']>
   redirectUrl?: Maybe<Scalars['String']>
   input?: Maybe<PasswordRecoveryLinkInput>
+}
+
+export type MutationBundleCreateArgs = {
+  input: CreateBundleInput
+}
+
+export type MutationBundleUpdateArgs = {
+  id: Scalars['Int']
+  input: UpdateBundleInput
+}
+
+export type MutationBundleDeleteArgs = {
+  id: Scalars['Int']
+}
+
+export type MutationBundleAddItemsArgs = {
+  id: Scalars['Int']
+  input: BundleAddItemsInput
+}
+
+export type MutationBundleRemoveItemArgs = {
+  id: Scalars['Int']
+  productId: Scalars['Int']
 }
 
 export type MutationCartStartArgs = {
@@ -3173,7 +3241,7 @@ export type ProductAttributeValuesArgs = {
 }
 
 export type ProductBundlesArgs = {
-  taxZone?: Scalars['String']
+  taxZone?: Maybe<Scalars['String']>
 }
 
 export type ProductCrossupsellsArgs = {
@@ -3484,12 +3552,13 @@ export type QueryAuthenticationArgs = {
 
 export type QueryBundlesArgs = {
   productId: Array<Scalars['Float']>
-  taxZone?: Scalars['String']
+  taxZone?: Maybe<Scalars['String']>
 }
 
 export type QueryBundleArgs = {
-  bundleId: Scalars['Float']
-  taxZone?: Scalars['String']
+  bundleId?: Maybe<Scalars['Float']>
+  taxZone?: Maybe<Scalars['String']>
+  input?: Maybe<BundleSearchInput>
 }
 
 export type QueryCartArgs = {
@@ -4568,6 +4637,22 @@ export type TrimInput = {
   right?: Maybe<Scalars['Int']>
   bottom?: Maybe<Scalars['Int']>
   left?: Maybe<Scalars['Int']>
+}
+
+export type UpdateBundleInput = {
+  name?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  discount?: Maybe<Scalars['Float']>
+  condition?: Maybe<BundleCondition>
+  price?: Maybe<Scalars['Float']>
+}
+
+export type UpdateCategoryInput = {
+  name?: Maybe<Array<LocalizedStringInput>>
+  description?: Maybe<Array<LocalizedStringInput>>
+  shortDescription?: Maybe<Array<LocalizedStringInput>>
+  parent?: Maybe<Scalars['Int']>
+  defaultLanguage?: Maybe<Scalars['String']>
 }
 
 export type UpdateContactInput = {
