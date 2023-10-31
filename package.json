@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": ">=10.x"
+    "node": ">=16.x"
   },
   "scripts": {
     "build": "yarn build:api-client && yarn build:composables && yarn build:theme",
@@ -70,5 +70,6 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {}
 }
