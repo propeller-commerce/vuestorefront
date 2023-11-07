@@ -2849,6 +2849,15 @@
     graphql "^16.0.1"
     graphql-tag "^2.12.6"
 
+"@propeller-commerce/propeller@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@propeller-commerce/propeller/-/propeller-1.5.0.tgz#d0aaa87d17de5f4e27bc68cc0fcec3b3282e50e0"
+  integrity sha512-zzBYI1N/1WXaFTzVIzFPr7jVIWbUbtQXAtPqq/WXTTnRWpy+M1mA9c6FFKpxzrb9NDli+kY4/+MNclXR3fyzdA==
+  dependencies:
+    "@propeller-commerce/propeller-api" "1.5.0"
+    "@vue-storefront/core" "~2.5.2"
+    cookie-universal "^2.1.5"
+
 "@rollup/plugin-node-resolve@^13.0.6":
   version "13.3.0"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-13.3.0.tgz#da1c5c5ce8316cef96a2f823d111c1e4e498801c"

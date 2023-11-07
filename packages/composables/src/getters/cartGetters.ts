@@ -28,7 +28,7 @@ function getItemImage(item: CartBaseItem): string {
 function getItemPrice(item: CartBaseItem): AgnosticPrice {
   return {
     regular: item.priceNet,
-    special: item.totalPriceNet / item.discount,
+    special: item.priceNet - Math.abs(item.discount),
   };
 }
 
