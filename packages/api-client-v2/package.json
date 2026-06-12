@@ -1,0 +1,30 @@
+{
+  "name": "@propeller-commerce/propeller-api-v2",
+  "version": "0.1.0",
+  "private": false,
+  "license": "MIT",
+  "sideEffects": false,
+  "server": "lib/index.server.js",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "rimraf lib && tsc -p tsconfig.build.json",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@propeller-commerce/propeller-sdk-v2": "^0.11.1",
+    "@vue-storefront/core": "~2.5.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "rollup-plugin-typescript2": "^0.30.0"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
