@@ -1,0 +1,141 @@
+# Publish the Propeller v2 integration packages to npm + cut a GitHub Release.
+#
+# Packages (this monorepo, packages/*):
+#   @propeller-commerce/propeller-api-v2   (packages/api-client-v2)
+#   @propeller-commerce/propeller-v2       (packages/composables-v2)
+#
+# propeller-v2 depends on propeller-api-v2, so api-client-v2 is published FIRST.
+#
+# Unlike the propeller-v2-core-ui CI (which lives on GitLab and one-way-mirrors
+# to GitHub), this repo is already GitHub-native — there is no mirror stage.
+# Releases are cut here directly with the built-in GITHUB_TOKEN.
+#
+# Per-package gate (idempotent — safe to re-run on every dispatch/tag):
+#   * package.json "version" parses
+#   * the CHANGELOG.md section for that version is NOT marked "Unreleased"
+#   * skip publish if <pkg>@<version> is already on npm
+#   * skip the GitHub Release if the v<pkg>-<version> tag already exists
+#
+# Hygiene gate: `npm pack --dry-run` MUST ship only lib/ (+ nuxt/) — ZERO
+# src/.env/memory/CLAUDE entries. The package `files` allowlist enforces this;
+# we assert it so a loosened allowlist can never leak private files to npm.
+#
+# Required repository secret (Settings → Secrets and variables → Actions):
+#   NPM_TOKEN  — npm *Automation* token with publish rights to the
+#                @propeller-commerce scope (bypasses 2FA, as CI needs).
+#
+# Triggers: manual (workflow_dispatch) for the maiden publish and ad-hoc runs;
+#           pushing a tag matching `v2-*` for repeatable releases later.
+
+name: Publish v2 packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Build + assert only; do NOT publish or release'
+        type: boolean
+        default: false
+  push:
+    tags:
+      - 'v2-*'
+
+permissions:
+  contents: write # needed to create tags + GitHub Releases
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1 # api-client-v2 must finish before composables-v2 resolves it from npm
+      matrix:
+        include:
+          - dir: api-client-v2
+            pkg: '@propeller-commerce/propeller-api-v2'
+          - dir: composables-v2
+            pkg: '@propeller-commerce/propeller-v2'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install workspace deps
+        run: yarn install --frozen-lockfile
+
+      - name: Read package version
+        id: meta
+        working-directory: packages/${{ matrix.dir }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          test -n "$VERSION" || { echo "Could not read version"; exit 1; }
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v2-${{ matrix.dir }}-$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Resolved ${{ matrix.pkg }}@$VERSION"
+
+      - name: CHANGELOG gate (skip if Unreleased)
+        id: changelog
+        working-directory: packages/${{ matrix.dir }}
+        run: |
+          VERSION="${{ steps.meta.outputs.version }}"
+          if grep -Eiq "^##[[:space:]]*\[${VERSION}\][^\n]*unreleased" CHANGELOG.md; then
+            echo "CHANGELOG marks ${VERSION} as Unreleased — skipping this package."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Extract the section body for the GitHub Release.
+          awk -v ver="$VERSION" '
+            $0 ~ ("^## [[]" ver "[]]") {grab=1; next}
+            grab && $0 ~ "^## [[]" {exit}
+            grab {print}
+          ' CHANGELOG.md > "$RUNNER_TEMP/RELEASE_BODY.md"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        if: steps.changelog.outputs.skip != 'true'
+        working-directory: packages/${{ matrix.dir }}
+        run: npm run build
+
+      - name: Assert tarball ships no private files
+        if: steps.changelog.outputs.skip != 'true'
+        working-directory: packages/${{ matrix.dir }}
+        run: |
+          echo "Inspecting tarball contents…"
+          LEAK=$(npm pack --dry-run --json | grep -iE '"path".*(\.claude|memory|MEMORY|CLAUDE|\.env|/src/)' || true)
+          if [ -n "$LEAK" ]; then
+            echo "PRIVATE FILE IN TARBALL — aborting:"; echo "$LEAK"; exit 1
+          fi
+          echo "Tarball clean."
+
+      - name: Publish to npm
+        if: steps.changelog.outputs.skip != 'true' && inputs.dry_run != true
+        working-directory: packages/${{ matrix.dir }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          PKG="${{ matrix.pkg }}"
+          VERSION="${{ steps.meta.outputs.version }}"
+          if npm view "${PKG}@${VERSION}" version >/dev/null 2>&1; then
+            echo "${PKG}@${VERSION} already published — nothing to do."
+            exit 0
+          fi
+          npm publish --access public
+
+      - name: Create GitHub Release
+        if: steps.changelog.outputs.skip != 'true' && inputs.dry_run != true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.meta.outputs.tag }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists — nothing to do."
+            exit 0
+          fi
+          gh release create "$TAG" \
+            --title "${{ matrix.pkg }} ${{ steps.meta.outputs.version }}" \
+            --notes-file "$RUNNER_TEMP/RELEASE_BODY.md" \
+            --target "${{ github.sha }}"

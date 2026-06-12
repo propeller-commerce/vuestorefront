@@ -9,6 +9,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "rimraf lib && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
     "test": "jest"
   },
   "dependencies": {
@@ -21,7 +22,9 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.6",
     "@types/js-cookie": "^3.0.1",
-    "rollup-plugin-typescript2": "^0.30.0"
+    "rimraf": "^3.0.2",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "typescript": "^5.4.5"
   },
   "peerDependencies": {
     "@nuxtjs/composition-api": "^0.29.3"
