@@ -23,13 +23,18 @@ export type V2Services = {
  * injects it. In `direct` mode the key is sent from the SDK itself.
  */
 export function createV2Client(settings: Settings): GraphQLClient {
+  // NOTE: pass `timeout` explicitly defaulted. The SDK applies its 30000ms
+  // default via `{ timeout: 30000, ...config }`, but an explicit
+  // `timeout: undefined` in `config` OVERWRITES that default with undefined,
+  // which makes `setTimeout(abort, undefined)` fire on the next tick and abort
+  // every request immediately ("GraphQL request timeout after undefinedms").
   return new GraphQLClient({
     endpoint: settings.api.endpoint,
     apiKey: settings.api.apiKey,
     orderEditorApiKey: settings.api.orderEditorApiKey,
     securityMode: settings.api.securityMode ?? 'proxy',
     clientId: settings.api.clientId,
-    timeout: settings.api.timeout,
+    timeout: settings.api.timeout ?? 30000,
     defaultLanguage: settings.siteLanguage ?? 'NL',
   });
 }

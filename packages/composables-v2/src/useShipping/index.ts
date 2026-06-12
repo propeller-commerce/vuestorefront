@@ -4,6 +4,7 @@ import {
   UseShippingParams,
 } from '@vue-storefront/core';
 import type { CartAddress as ShippingAddress } from '@propeller-commerce/propeller-api-v2';
+import { CartAddressType } from '@propeller-commerce/propeller-sdk-v2';
 import type { UseShippingAddParams as AddParams } from '../types';
 import { ref } from '@nuxtjs/composition-api';
 
@@ -34,7 +35,6 @@ const params: UseShippingParams<ShippingAddress, AddParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   save: async (context: Context, { shippingDetails, customQuery }) => {
-    console.log('Propeller: useShipping.save');
     serverErrors.value = [];
     // TODO: temp
     // get this from settings
@@ -42,9 +42,11 @@ const params: UseShippingParams<ShippingAddress, AddParams> = {
     const cartId = context.$propeller.config.app.cookies.get(cartCookieName);
 
     const shippingData = {
-      cartId,
-      type: 'delivery',
       ...shippingDetails,
+      cartId,
+      // v2 `CartUpdateAddressInput.type` is the `CartAddressType` enum
+      // (INVOICE/DELIVERY), not the v1 lowercase string.
+      type: CartAddressType.DELIVERY,
     };
 
     const { data, errors } = await context.$propeller.api.cartUpdateAddress(

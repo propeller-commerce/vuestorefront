@@ -17,6 +17,56 @@ import { ApiContext, V1Envelope, adapt } from './context';
 
 const lang = (ctx: ApiContext) => ctx.config.siteLanguage ?? 'NL';
 
+/**
+ * The v2 product-listing query (`getProducts` → SDK `ProductGridFields`) does
+ * NOT return per-product `attributes` — only names/slugs/price/media/status.
+ * The v1 listing did surface the attributes the storefront grid reads
+ * (brand / education-type). To keep the grid behaviour identical we re-attach
+ * those attributes here: for each listed product fetch only the configured
+ * `productListAttributes` via `getAttributeResultByProductId` (one narrow call
+ * per product, run in parallel) and shape the result into the
+ * `product.attributes.items[]` form `productGetters.getAttributes` expects.
+ *
+ * Note: there is no batch variant — `getAttributeResultByProductId` keys off
+ * its positional `productId`; the input's `productIds[]` is ignored. With a
+ * page of ~12 products this is ~12 small parallel requests.
+ */
+async function enrichWithAttributes(
+  ctx: ApiContext,
+  response: ProductsResponse | undefined
+): Promise<void> {
+  const names = ctx.config.productListAttributes;
+  if (!names || names.length === 0) return;
+  const items: any[] = (response as any)?.items || [];
+  if (items.length === 0) return;
+
+  await Promise.all(
+    items.map(async (product: any) => {
+      const productId = product?.productId;
+      if (!productId) return;
+      // Skip if the product already carries attributes (e.g. a Cluster's
+      // defaultProduct that came through a richer query).
+      if (product?.attributes?.items?.length) return;
+      try {
+        const result = await ctx.services.product.getAttributeResultByProductId(
+          Number(productId),
+          {
+            page: 1,
+            offset: Math.max(names.length, 50),
+            attributeDescription: { names },
+            includeDefaultValues: false,
+          } as any
+        );
+        product.attributes = { items: (result as any)?.items || [] };
+      } catch {
+        // Attribute enrichment is best-effort: a failure here must not blank
+        // out an otherwise-valid product listing.
+        product.attributes = { items: [] };
+      }
+    })
+  );
+}
+
 /** v1 `productDetail(context, { id })` → `{ data: { product } }` */
 export async function productDetail(
   ctx: ApiContext,
@@ -66,6 +116,7 @@ export async function products(
       language: lang(ctx),
     } as any)
   );
+  if (env.data) await enrichWithAttributes(ctx, env.data as any);
   return env.data
     ? { data: { products: env.data }, errors: env.errors }
     : (env as any);
@@ -90,6 +141,7 @@ export async function bundles(
       language: lang(ctx),
     } as any)
   );
+  if (env.data) await enrichWithAttributes(ctx, env.data as any);
   return env.data
     ? { data: { products: env.data }, errors: env.errors }
     : (env as any);

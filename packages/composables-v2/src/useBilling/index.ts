@@ -1,5 +1,6 @@
 import { Context, useBillingFactory, UseBillingParams } from '@vue-storefront/core';
 import type { CartAddress as BillingAddress } from '@propeller-commerce/propeller-api-v2';
+import { CartAddressType } from '@propeller-commerce/propeller-sdk-v2';
 import type { UseBillingAddParams as AddParams } from '../types';
 import { ref } from '@nuxtjs/composition-api';
 
@@ -8,8 +9,6 @@ const serverErrors = ref([]);
 const params: UseBillingParams<BillingAddress, AddParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
-    console.log('[Propeller] loadBilling', { customQuery });
-
     serverErrors.value = [];
     const cartCookieName = 'propeller-vsf-cart';
 
@@ -32,7 +31,6 @@ const params: UseBillingParams<BillingAddress, AddParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   save: async (context: Context, { params, billingDetails, customQuery }) => {
-    console.log('Propeller: useBilling.save');
     serverErrors.value = [];
     // TODO: temp
     // get this from settings
@@ -40,9 +38,11 @@ const params: UseBillingParams<BillingAddress, AddParams> = {
     const cartId = context.$propeller.config.app.cookies.get(cartCookieName);
 
     const shippingData = {
-      cartId,
-      type: 'invoice',
       ...billingDetails,
+      cartId,
+      // v2 `CartUpdateAddressInput.type` is the `CartAddressType` enum
+      // (INVOICE/DELIVERY), not the v1 lowercase string.
+      type: CartAddressType.INVOICE,
     };
 
     const { data, errors } = await context.$propeller.api.cartUpdateAddress(shippingData);

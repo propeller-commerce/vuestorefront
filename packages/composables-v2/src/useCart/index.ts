@@ -35,7 +35,17 @@ const params: UseCartFactoryParams<Cart, CartItem, ProductTemp> = {
     const cart = await context.$propeller.api.cart(existngCartId);
     serverErrors.value.push(...cart.errors || []);
 
-    return cart?.data?.cart;
+    // Migration guard: a `propeller-vsf-cart` cookie left over from propeller v1
+    // holds a cartId v2 doesn't recognise. v2 then returns no cart, so the cart
+    // page/badge stay empty AND `addItem` keeps targeting the dead id (it skips
+    // `cartStart` because a cookie exists). Drop the stale cookie so the next
+    // interaction starts a fresh v2 cart instead of forcing the user to clear it.
+    if (!cart?.data?.cart) {
+      context.$propeller.config.app.cookies.remove(cartCookieName, { path: '/' });
+      return {};
+    }
+
+    return cart.data.cart;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
