@@ -95,6 +95,14 @@ jobs:
           ' CHANGELOG.md > "$RUNNER_TEMP/RELEASE_BODY.md"
           echo "skip=false" >> "$GITHUB_OUTPUT"
 
+      # composables-v2 imports @propeller-commerce/propeller-api-v2, resolved via
+      # node_modules → api-client-v2/lib (its built types). Each matrix job is a
+      # fresh runner, so that sibling's lib/ isn't present from the api-client-v2
+      # job — build the in-repo dependency first so tsc can resolve it.
+      - name: Build in-repo dependency
+        if: steps.changelog.outputs.skip != 'true' && matrix.dir == 'composables-v2'
+        run: npm run build --workspace=@propeller-commerce/propeller-api-v2
+
       - name: Build
         if: steps.changelog.outputs.skip != 'true'
         working-directory: packages/${{ matrix.dir }}
