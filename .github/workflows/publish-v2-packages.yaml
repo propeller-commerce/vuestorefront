@@ -133,8 +133,13 @@ jobs:
           fi
           npm publish --access public
 
+      # Non-fatal: the repo has an active "tag create protection" ruleset that
+      # blocks the Actions token from creating the release tag ("creations being
+      # restricted"). npm publish is the artifact that matters, so a blocked
+      # Release must never fail the job (mirrors GitLab allow_failure: true).
       - name: Create GitHub Release
         if: steps.changelog.outputs.skip != 'true' && inputs.dry_run != true
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
